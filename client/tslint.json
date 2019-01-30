@@ -1,0 +1,16 @@
+{
+    "extends": ["tslint:recommended", "tslint-config-standard", "tslint-config-prettier"],
+    "linterOptions": {
+        "exclude": [
+            "node_modules/**/*.ts"
+        ]
+    },
+    "rules": {
+        "no-console": {
+            "severity": "warning"
+        },
+        "no-null-keyword": {
+            "severity": "warning"
+        }
+    }
+}

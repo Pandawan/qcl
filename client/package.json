@@ -1,0 +1,32 @@
+{
+  "name": "qcl-client",
+  "version": "1.0.0",
+  "description": "quicli",
+  "main": "lib/index.js",
+  "private": true,
+  "scripts": {
+    "start": "node lib/index.js",
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PandawanFr/quicli.git"
+  },
+  "keywords": [
+    "cli"
+  ],
+  "author": "Pandawan, KhoomeiK",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PandawanFr/quicli/issues"
+  },
+  "homepage": "https://github.com/PandawanFr/quicli#readme",
+  "devDependencies": {
+    "prettier": "^1.16.1",
+    "tslint": "^5.12.1",
+    "tslint-config-prettier": "^1.17.0",
+    "tslint-config-standard": "^8.0.1",
+    "typescript": "^3.2.4"
+  }
+}
