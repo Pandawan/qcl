@@ -1,0 +1,21 @@
+{
+  "name": "qcl-server",
+  "version": "1.0.0",
+  "description": "serverside qcl component",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/PandawanFr/quicli"
+  },
+  "author": "KhoomeiK, PandawanFr",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "nodemon": "^1.18.9",
+    "pkg": "^4.3.7"
+  }
+}
