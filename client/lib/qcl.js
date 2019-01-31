@@ -4,46 +4,105 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_extra_1 = __importDefault(require("fs-extra"));
+const moment_1 = __importDefault(require("moment"));
 const path_1 = __importDefault(require("path"));
 /**
  * Runs basic qcl tasks and cleanup
+ * @param debug Whether or not to log status (default true)
  */
-function cleanup() {
-    console.log('Cleaning up...');
-    // TODO: Cleanup packages
+async function cleanup(debug = true) {
+    if (debug) {
+        console.log('Cleaning up old packages');
+    }
+    const data = await getData();
+    // TODO: Add config for when to delete
+    const packagesToUninstall = data.packages.filter(p => 
+    // If the install date + 48 hours < current date, uninstall this package
+    moment_1.default(p.installed)
+        .add('48', 'hours')
+        .isBefore(moment_1.default()));
+    // Loop through the list of packages and uninstall them
+    for (const pkg of packagesToUninstall) {
+        await uninstall(pkg.id, true);
+    }
+    if (debug) {
+        console.log('Successfully cleaned up packages');
+    }
 }
 // TODO: Allow for multiple packages (using spread operator)
 /**
  * Installs the given package
+ * @param pkg The package to install
+ * @param debug Whether or not to log status (default true)
  */
-function install(pkg) {
+async function install(pkg, debug = true) {
     if (!pkg) {
         throw new Error('No package was given');
     }
-    console.log(`Installing "${pkg}" in ${getDataPath('packages')}`);
+    if (debug) {
+        console.log(`Installing "${pkg}" in ${getDataPath('packages')}`);
+    }
     // TODO: Install packages
 }
 // TODO: Probably want to store the list of currently installed packages in a file in the /qcl/ folder along with its install date (so it can be removed in 48hours)
 /**
  * Uninstalls the given package
+ * @param pkg The package to uninstall
+ * @param debug Whether or not to log status (default true)
  */
-function uninstall(pkg) {
+async function uninstall(pkg, debug = true) {
     if (!pkg) {
         throw new Error('No package was given');
     }
-    console.log(`Uninstalling "${pkg}" in ${getDataPath('packages')}`);
-    // TODO: Uninstall packages
+    const data = await getData();
+    const index = data.packages.findIndex(p => p.id === pkg);
+    // Check that this package was installed.
+    if (index < 0) {
+        throw new Error(`Package "${pkg}" was not installed`);
+    }
+    if (debug) {
+        console.log(`Uninstalling "${pkg}" in ${getDataPath('packages')}`);
+    }
+    // Delete the package from file system
+    await fs_extra_1.default.remove(getPackagePath(pkg));
+    // Filter the packages to remove the package at the given index
+    data.packages = data.packages.filter((v, i) => i !== index);
+    // Update the data file with changes
+    await setData(data);
+    if (debug) {
+        console.log(`"${pkg}" was successfully uninstalled`);
+    }
 }
 /**
  * List all packages installed
+ * @param debug Whether or not to log status (default true)
  */
-async function list() {
+async function list(debug = true) {
     try {
         const data = await getData();
-        console.log(data.packages && data.packages.length !== 0
-            ? data.packages.join(', ')
-            : 'No packages installed.');
+        if (debug) {
+            console.log(data.packages && data.packages.length !== 0
+                ? data.packages.join(', ')
+                : 'No packages installed');
+        }
         return data.packages;
+    }
+    catch (error) {
+        // TODO: Better error handling
+        throw error;
+    }
+}
+/**
+ * Set the qcl data
+ * @param data The data to set
+ */
+async function setData(data) {
+    const dataPath = getDataPath('data');
+    try {
+        // Make sure the entire path exists
+        await fs_extra_1.default.ensureFile(dataPath);
+        // Write the default data to the path
+        await fs_extra_1.default.writeJSON(dataPath, data);
     }
     catch (error) {
         // TODO: Better error handling
@@ -54,17 +113,18 @@ async function list() {
  * Get the qcl data
  */
 async function getData() {
+    const dataPath = getDataPath('data');
     try {
         // If the path exists, read it and return its data
-        if (await fs_extra_1.default.pathExists(getDataPath('data'))) {
+        if (await fs_extra_1.default.pathExists(dataPath)) {
             // Read the JSON file and return its data
-            const data = await fs_extra_1.default.readJson(getDataPath('data'));
+            const data = await fs_extra_1.default.readJson(dataPath);
             return data;
         }
         else {
+            // Set data using defaultData and return it
             const data = defaultData();
-            // Write the default data to the path
-            await fs_extra_1.default.writeJSON(getDataPath('data'), data);
+            await setData(data);
             return data;
         }
     }
@@ -108,13 +168,19 @@ function getDataPath(type) {
         case undefined:
             return path_1.default.normalize(dataPath);
         case 'packages':
-            return path_1.default.join(dataPath, '/pkg/');
+            return path_1.default.join(dataPath, '/packages/');
         case 'data':
             return path_1.default.join(dataPath, 'data.json');
         default:
             // TODO: Better error messages
             throw new Error(`Data Path type must be one of ['directory', 'packages', 'data']`);
     }
+}
+/**
+ * Get the directory where a specific package is installed
+ */
+function getPackagePath(pkg) {
+    return path_1.default.join(getDataPath('packages'), pkg);
 }
 // TODO: Should getDataPath, getPackagePath, etc. be exported?
 exports.default = { install, uninstall, cleanup, list };
