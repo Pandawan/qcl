@@ -6,6 +6,9 @@ app.get('/pkg/*', (req, res) => {
 	let p = req.path.slice(1);
 	console.log(p);
 
+	download(p);
+	compile(p);
+
 	/* TODO:
 	>Check for userKey and userOS in req.params (maybe IP too)
 		>If userKey is in db, then continue
@@ -19,6 +22,14 @@ app.get('/pkg/*', (req, res) => {
 
 	res.sendFile(`/Users/rohan/Documents/Webwork/quicli/server/bin/${p}-userOS`); // userOS
 });
+
+download = () => {
+	// npm programmaticaly (fs?)
+}
+
+compile = () => {
+	// pkg
+}
 
 app.get('/createKey', (req, res) => {
 	// TODO: creates key for paying user, pushes into db, and returns it to res
