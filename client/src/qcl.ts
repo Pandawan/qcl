@@ -2,6 +2,8 @@ import fse from 'fs-extra';
 import moment, { DurationInputArg2 } from 'moment';
 import path from 'path';
 
+// TODO: Might want to re-organize this entire file into multiple files (one for each major subcommand and one for shared functions)
+
 // TODO: Might want to rename those to "better" names
 interface IQCLPackage {
   /**
@@ -12,6 +14,10 @@ interface IQCLPackage {
    * Date of installation in ISO 8601 format
    */
   installed: string;
+  /**
+   * Name of the file in the /pkg folder
+   */
+  file: string;
 }
 
 interface IQCLData {
@@ -35,16 +41,16 @@ async function cleanup(debug: boolean = true) {
   const data = await getData();
 
   try {
-    const packagesToUninstall = data.packages.filter(p =>
+    const packagesToUninstall = data.packages.filter(pkg =>
       // If the install date + 48 hours < current date, uninstall this package
-      moment(p.installed)
+      moment(pkg.installed)
         .add(data.preservationTime[0], data.preservationTime[1])
         .isBefore(moment())
     );
 
     // Loop through the list of packages and uninstall them
     for (const pkg of packagesToUninstall) {
-      await uninstall(pkg.name, true);
+      await uninstall(pkg.name, debug);
     }
 
     if (debug) {
@@ -55,19 +61,20 @@ async function cleanup(debug: boolean = true) {
   }
 }
 
+// TODO: Allow "debug" as a "--debug" option instead in CLI
 // TODO: Allow for multiple packages (using spread operator)
 /**
  * Installs the given package
- * @param pkg The package to install
+ * @param pkgName The package to install
  * @param debug Whether or not to log status (default true)
  */
-async function install(pkg: string, debug: boolean = true) {
-  if (!pkg) {
+async function install(pkgName: string, debug: boolean = true) {
+  if (!pkgName) {
     throw new Error('No package was given.');
   }
 
   if (debug) {
-    console.log(`Installing "${pkg}" in ${getDataPath('packages')}`);
+    console.log(`Installing "${pkgName}" in ${getDataPath('packages')}`);
   }
   // TODO: Install packages
 }
@@ -76,24 +83,26 @@ async function install(pkg: string, debug: boolean = true) {
 
 /**
  * Uninstalls the given package
- * @param pkg The package to uninstall
+ * @param pkgName The package to uninstall
  * @param debug Whether or not to log status (default true)
  */
-async function uninstall(pkg: string, debug: boolean = true) {
-  if (!pkg) {
+async function uninstall(pkgName: string, debug: boolean = true) {
+  if (!pkgName) {
     throw new Error('No package was given.');
   }
 
   const data = await getData();
-  const index = data.packages.findIndex(p => p.name === pkg);
+  const index = data.packages.findIndex(p => p.name === pkgName);
   // Check that this package was installed.
   if (index < 0) {
-    throw new Error(`Package "${pkg}" was not installed.`);
+    throw new Error(`Package "${pkgName}" was not installed.`);
   }
 
   if (debug) {
-    console.log(`Uninstalling "${pkg}" in ${getDataPath('packages')}`);
+    console.log(`Uninstalling "${pkgName}" in ${getDataPath('packages')}`);
   }
+
+  const pkg = data.packages[index];
 
   // Delete the package from file system
   await fse.remove(getPackagePath(pkg));
@@ -103,7 +112,7 @@ async function uninstall(pkg: string, debug: boolean = true) {
   await setData(data);
 
   if (debug) {
-    console.log(`"${pkg}" was successfully uninstalled.`);
+    console.log(`Package "${pkgName}" was successfully uninstalled.`);
   }
 }
 
@@ -209,7 +218,7 @@ function getDataPath(
     case undefined:
       return path.normalize(dataPath);
     case 'packages':
-      return path.join(dataPath, '/packages/');
+      return path.join(dataPath, '/pkg/');
     case 'data':
       return path.join(dataPath, 'data.json');
     default:
@@ -223,8 +232,8 @@ function getDataPath(
 /**
  * Get the directory where a specific package is installed
  */
-function getPackagePath(pkg: string) {
-  return path.join(getDataPath('packages'), pkg);
+function getPackagePath(pkg: IQCLPackage) {
+  return path.join(getDataPath('packages'), pkg.file);
 }
 
 // TODO: Should getDataPath, getPackagePath, etc. be exported?

@@ -16,14 +16,14 @@ async function cleanup(debug = true) {
     }
     const data = await getData();
     try {
-        const packagesToUninstall = data.packages.filter(p => 
+        const packagesToUninstall = data.packages.filter(pkg => 
         // If the install date + 48 hours < current date, uninstall this package
-        moment_1.default(p.installed)
+        moment_1.default(pkg.installed)
             .add(data.preservationTime[0], data.preservationTime[1])
             .isBefore(moment_1.default()));
         // Loop through the list of packages and uninstall them
         for (const pkg of packagesToUninstall) {
-            await uninstall(pkg.name, true);
+            await uninstall(pkg.name, debug);
         }
         if (debug) {
             console.log('Successfully cleaned up packages.');
@@ -33,40 +33,42 @@ async function cleanup(debug = true) {
         throw error;
     }
 }
+// TODO: Allow "debug" as a "--debug" option instead in CLI
 // TODO: Allow for multiple packages (using spread operator)
 /**
  * Installs the given package
- * @param pkg The package to install
+ * @param pkgName The package to install
  * @param debug Whether or not to log status (default true)
  */
-async function install(pkg, debug = true) {
-    if (!pkg) {
+async function install(pkgName, debug = true) {
+    if (!pkgName) {
         throw new Error('No package was given.');
     }
     if (debug) {
-        console.log(`Installing "${pkg}" in ${getDataPath('packages')}`);
+        console.log(`Installing "${pkgName}" in ${getDataPath('packages')}`);
     }
     // TODO: Install packages
 }
 // TODO: Probably want to store the list of currently installed packages in a file in the /qcl/ folder along with its install date (so it can be removed in 48hours)
 /**
  * Uninstalls the given package
- * @param pkg The package to uninstall
+ * @param pkgName The package to uninstall
  * @param debug Whether or not to log status (default true)
  */
-async function uninstall(pkg, debug = true) {
-    if (!pkg) {
+async function uninstall(pkgName, debug = true) {
+    if (!pkgName) {
         throw new Error('No package was given.');
     }
     const data = await getData();
-    const index = data.packages.findIndex(p => p.name === pkg);
+    const index = data.packages.findIndex(p => p.name === pkgName);
     // Check that this package was installed.
     if (index < 0) {
-        throw new Error(`Package "${pkg}" was not installed.`);
+        throw new Error(`Package "${pkgName}" was not installed.`);
     }
     if (debug) {
-        console.log(`Uninstalling "${pkg}" in ${getDataPath('packages')}`);
+        console.log(`Uninstalling "${pkgName}" in ${getDataPath('packages')}`);
     }
+    const pkg = data.packages[index];
     // Delete the package from file system
     await fs_extra_1.default.remove(getPackagePath(pkg));
     // Filter the packages to remove the package at the given index
@@ -74,7 +76,7 @@ async function uninstall(pkg, debug = true) {
     // Update the data file with changes
     await setData(data);
     if (debug) {
-        console.log(`"${pkg}" was successfully uninstalled.`);
+        console.log(`Package "${pkgName}" was successfully uninstalled.`);
     }
 }
 /**
@@ -173,7 +175,7 @@ function getDataPath(type) {
         case undefined:
             return path_1.default.normalize(dataPath);
         case 'packages':
-            return path_1.default.join(dataPath, '/packages/');
+            return path_1.default.join(dataPath, '/pkg/');
         case 'data':
             return path_1.default.join(dataPath, 'data.json');
         default:
@@ -185,7 +187,7 @@ function getDataPath(type) {
  * Get the directory where a specific package is installed
  */
 function getPackagePath(pkg) {
-    return path_1.default.join(getDataPath('packages'), pkg);
+    return path_1.default.join(getDataPath('packages'), pkg.file);
 }
 // TODO: Should getDataPath, getPackagePath, etc. be exported?
 exports.default = { install, uninstall, cleanup, list };
