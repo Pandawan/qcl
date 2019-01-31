@@ -30,7 +30,7 @@ program
   .action(qcl.list);
 
 // Any other argument that isn't specified
-program.on('command:*', function() {
+program.on('command:*', () => {
   console.error(
     'Invalid command: %s\nSee --help for a list of available commands.',
     program.args.join(' ')
@@ -42,6 +42,7 @@ program.parse(process.argv);
 
 // Default action if no arguments are passed
 if (program.args.length === 0) {
+  qcl.cleanup();
 }
 
 // Export qcl as default so it can be used as a node package (as well as CLI)

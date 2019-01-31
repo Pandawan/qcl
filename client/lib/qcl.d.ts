@@ -4,6 +4,11 @@ interface IQCLPackage {
      */
     name: string;
     /**
+     * Id of the package installed
+     * (most likely a path-compatible snake_case version of the name).
+     */
+    id: string;
+    /**
      * Date of installation in ISO 8601 format
      */
     installed: string;
@@ -14,12 +19,10 @@ interface IQCLPackage {
 declare function cleanup(): void;
 /**
  * Installs the given package
- * @param pkg The package to install
  */
 declare function install(pkg: string): void;
 /**
  * Uninstalls the given package
- * @param pkg The package to uninstall
  */
 declare function uninstall(pkg: string): void;
 /**

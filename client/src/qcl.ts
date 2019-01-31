@@ -8,6 +8,11 @@ interface IQCLPackage {
    */
   name: string;
   /**
+   * Id of the package installed
+   * (most likely a path-compatible snake_case version of the name).
+   */
+  id: string;
+  /**
    * Date of installation in ISO 8601 format
    */
   installed: string;
@@ -28,7 +33,6 @@ function cleanup() {
 // TODO: Allow for multiple packages (using spread operator)
 /**
  * Installs the given package
- * @param pkg The package to install
  */
 function install(pkg: string) {
   if (!pkg) {
@@ -43,7 +47,6 @@ function install(pkg: string) {
 
 /**
  * Uninstalls the given package
- * @param pkg The package to uninstall
  */
 function uninstall(pkg: string) {
   if (!pkg) {
@@ -60,6 +63,11 @@ function uninstall(pkg: string) {
 async function list(): Promise<IQCLPackage[]> {
   try {
     const data = await getData();
+    console.log(
+      data.packages && data.packages.length !== 0
+        ? data.packages.join(', ')
+        : 'No packages installed.'
+    );
     return data.packages;
   } catch (error) {
     // TODO: Better error handling
@@ -68,17 +76,32 @@ async function list(): Promise<IQCLPackage[]> {
 }
 
 /**
- * Get the data.json file
+ * Get the qcl data
  */
 async function getData(): Promise<IQCLData> {
   try {
-    const data: IQCLData = await fse.readJson(getDataPath('data'));
-    // TODO: Create file if doesn't exist
-    return data;
+    // If the path exists, read it and return its data
+    if (await fse.pathExists(getDataPath('data'))) {
+      // Read the JSON file and return its data
+      const data: IQCLData = await fse.readJson(getDataPath('data'));
+      return data;
+    } else {
+      const data: IQCLData = defaultData();
+      // Write the default data to the path
+      await fse.writeJSON(getDataPath('data'), data);
+      return data;
+    }
   } catch (error) {
     // TODO: Better error handling
     throw error;
   }
+}
+
+/**
+ * Create a default data object
+ */
+function defaultData(): IQCLData {
+  return { packages: [] };
 }
 
 // TODO: Might want to separate this function into three?

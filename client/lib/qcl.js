@@ -15,7 +15,6 @@ function cleanup() {
 // TODO: Allow for multiple packages (using spread operator)
 /**
  * Installs the given package
- * @param pkg The package to install
  */
 function install(pkg) {
     if (!pkg) {
@@ -27,7 +26,6 @@ function install(pkg) {
 // TODO: Probably want to store the list of currently installed packages in a file in the /qcl/ folder along with its install date (so it can be removed in 48hours)
 /**
  * Uninstalls the given package
- * @param pkg The package to uninstall
  */
 function uninstall(pkg) {
     if (!pkg) {
@@ -42,6 +40,9 @@ function uninstall(pkg) {
 async function list() {
     try {
         const data = await getData();
+        console.log(data.packages && data.packages.length !== 0
+            ? data.packages.join(', ')
+            : 'No packages installed.');
         return data.packages;
     }
     catch (error) {
@@ -50,18 +51,33 @@ async function list() {
     }
 }
 /**
- * Get the data.json file
+ * Get the qcl data
  */
 async function getData() {
     try {
-        const data = await fs_extra_1.default.readJson(getDataPath('data'));
-        // TODO: Create file if doesn't exist
-        return data;
+        // If the path exists, read it and return its data
+        if (await fs_extra_1.default.pathExists(getDataPath('data'))) {
+            // Read the JSON file and return its data
+            const data = await fs_extra_1.default.readJson(getDataPath('data'));
+            return data;
+        }
+        else {
+            const data = defaultData();
+            // Write the default data to the path
+            await fs_extra_1.default.writeJSON(getDataPath('data'), data);
+            return data;
+        }
     }
     catch (error) {
         // TODO: Better error handling
         throw error;
     }
+}
+/**
+ * Create a default data object
+ */
+function defaultData() {
+    return { packages: [] };
 }
 // TODO: Might want to separate this function into three?
 /**

@@ -28,13 +28,14 @@ commander_1.default
     .description('description')
     .action(qcl_1.default.list);
 // Any other argument that isn't specified
-commander_1.default.on('command:*', function () {
+commander_1.default.on('command:*', () => {
     console.error('Invalid command: %s\nSee --help for a list of available commands.', commander_1.default.args.join(' '));
     process.exit(1);
 });
 commander_1.default.parse(process.argv);
 // Default action if no arguments are passed
 if (commander_1.default.args.length === 0) {
+    qcl_1.default.cleanup();
 }
 // Export qcl as default so it can be used as a node package (as well as CLI)
 exports.default = qcl_1.default;
