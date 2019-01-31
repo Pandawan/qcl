@@ -4,11 +4,6 @@ interface IQCLPackage {
      */
     name: string;
     /**
-     * Id of the package installed
-     * (most likely a path-compatible snake_case version of the name).
-     */
-    id: string;
-    /**
      * Date of installation in ISO 8601 format
      */
     installed: string;

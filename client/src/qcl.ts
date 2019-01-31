@@ -1,5 +1,5 @@
 import fse from 'fs-extra';
-import moment from 'moment';
+import moment, { DurationInputArg2 } from 'moment';
 import path from 'path';
 
 // TODO: Might want to rename those to "better" names
@@ -9,11 +9,6 @@ interface IQCLPackage {
    */
   name: string;
   /**
-   * Id of the package installed
-   * (most likely a path-compatible snake_case version of the name).
-   */
-  id: string;
-  /**
    * Date of installation in ISO 8601 format
    */
   installed: string;
@@ -21,6 +16,11 @@ interface IQCLPackage {
 
 interface IQCLData {
   packages: IQCLPackage[];
+  /**
+   * How long should a package be preserved
+   * Format: [number, 'unit']
+   */
+  preservationTime: [number, DurationInputArg2];
 }
 
 /**
@@ -29,26 +29,29 @@ interface IQCLData {
  */
 async function cleanup(debug: boolean = true) {
   if (debug) {
-    console.log('Cleaning up old packages');
+    console.log('Cleaning up old packages.');
   }
 
   const data = await getData();
 
-  // TODO: Add config for when to delete
-  const packagesToUninstall = data.packages.filter(p =>
-    // If the install date + 48 hours < current date, uninstall this package
-    moment(p.installed)
-      .add('48', 'hours')
-      .isBefore(moment())
-  );
+  try {
+    const packagesToUninstall = data.packages.filter(p =>
+      // If the install date + 48 hours < current date, uninstall this package
+      moment(p.installed)
+        .add(data.preservationTime[0], data.preservationTime[1])
+        .isBefore(moment())
+    );
 
-  // Loop through the list of packages and uninstall them
-  for (const pkg of packagesToUninstall) {
-    await uninstall(pkg.id, true);
-  }
+    // Loop through the list of packages and uninstall them
+    for (const pkg of packagesToUninstall) {
+      await uninstall(pkg.name, true);
+    }
 
-  if (debug) {
-    console.log('Successfully cleaned up packages');
+    if (debug) {
+      console.log('Successfully cleaned up packages.');
+    }
+  } catch (error) {
+    throw error;
   }
 }
 
@@ -60,7 +63,7 @@ async function cleanup(debug: boolean = true) {
  */
 async function install(pkg: string, debug: boolean = true) {
   if (!pkg) {
-    throw new Error('No package was given');
+    throw new Error('No package was given.');
   }
 
   if (debug) {
@@ -78,14 +81,14 @@ async function install(pkg: string, debug: boolean = true) {
  */
 async function uninstall(pkg: string, debug: boolean = true) {
   if (!pkg) {
-    throw new Error('No package was given');
+    throw new Error('No package was given.');
   }
 
   const data = await getData();
-  const index = data.packages.findIndex(p => p.id === pkg);
+  const index = data.packages.findIndex(p => p.name === pkg);
   // Check that this package was installed.
   if (index < 0) {
-    throw new Error(`Package "${pkg}" was not installed`);
+    throw new Error(`Package "${pkg}" was not installed.`);
   }
 
   if (debug) {
@@ -100,7 +103,7 @@ async function uninstall(pkg: string, debug: boolean = true) {
   await setData(data);
 
   if (debug) {
-    console.log(`"${pkg}" was successfully uninstalled`);
+    console.log(`"${pkg}" was successfully uninstalled.`);
   }
 }
 
@@ -115,7 +118,7 @@ async function list(debug: boolean = true): Promise<IQCLPackage[]> {
       console.log(
         data.packages && data.packages.length !== 0
           ? data.packages.join(', ')
-          : 'No packages installed'
+          : 'No packages installed.'
       );
     }
     return data.packages;
@@ -169,7 +172,8 @@ async function getData(): Promise<IQCLData> {
  * Create a default data object
  */
 function defaultData(): IQCLData {
-  return { packages: [] };
+  // TODO: Add a "set" subcommand to allow for modification of settings in CLI
+  return { packages: [], preservationTime: [48, 'hours'] };
 }
 
 // TODO: Might want to separate this function into three?
@@ -196,7 +200,7 @@ function getDataPath(
       break;
     default:
       // TODO: Better platform support
-      throw new Error('Platform not supported!');
+      throw new Error('Platform not supported.');
   }
 
   // Different path based on requested type

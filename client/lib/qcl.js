@@ -12,21 +12,25 @@ const path_1 = __importDefault(require("path"));
  */
 async function cleanup(debug = true) {
     if (debug) {
-        console.log('Cleaning up old packages');
+        console.log('Cleaning up old packages.');
     }
     const data = await getData();
-    // TODO: Add config for when to delete
-    const packagesToUninstall = data.packages.filter(p => 
-    // If the install date + 48 hours < current date, uninstall this package
-    moment_1.default(p.installed)
-        .add('48', 'hours')
-        .isBefore(moment_1.default()));
-    // Loop through the list of packages and uninstall them
-    for (const pkg of packagesToUninstall) {
-        await uninstall(pkg.id, true);
+    try {
+        const packagesToUninstall = data.packages.filter(p => 
+        // If the install date + 48 hours < current date, uninstall this package
+        moment_1.default(p.installed)
+            .add(data.preservationTime[0], data.preservationTime[1])
+            .isBefore(moment_1.default()));
+        // Loop through the list of packages and uninstall them
+        for (const pkg of packagesToUninstall) {
+            await uninstall(pkg.name, true);
+        }
+        if (debug) {
+            console.log('Successfully cleaned up packages.');
+        }
     }
-    if (debug) {
-        console.log('Successfully cleaned up packages');
+    catch (error) {
+        throw error;
     }
 }
 // TODO: Allow for multiple packages (using spread operator)
@@ -37,7 +41,7 @@ async function cleanup(debug = true) {
  */
 async function install(pkg, debug = true) {
     if (!pkg) {
-        throw new Error('No package was given');
+        throw new Error('No package was given.');
     }
     if (debug) {
         console.log(`Installing "${pkg}" in ${getDataPath('packages')}`);
@@ -52,13 +56,13 @@ async function install(pkg, debug = true) {
  */
 async function uninstall(pkg, debug = true) {
     if (!pkg) {
-        throw new Error('No package was given');
+        throw new Error('No package was given.');
     }
     const data = await getData();
-    const index = data.packages.findIndex(p => p.id === pkg);
+    const index = data.packages.findIndex(p => p.name === pkg);
     // Check that this package was installed.
     if (index < 0) {
-        throw new Error(`Package "${pkg}" was not installed`);
+        throw new Error(`Package "${pkg}" was not installed.`);
     }
     if (debug) {
         console.log(`Uninstalling "${pkg}" in ${getDataPath('packages')}`);
@@ -70,7 +74,7 @@ async function uninstall(pkg, debug = true) {
     // Update the data file with changes
     await setData(data);
     if (debug) {
-        console.log(`"${pkg}" was successfully uninstalled`);
+        console.log(`"${pkg}" was successfully uninstalled.`);
     }
 }
 /**
@@ -83,7 +87,7 @@ async function list(debug = true) {
         if (debug) {
             console.log(data.packages && data.packages.length !== 0
                 ? data.packages.join(', ')
-                : 'No packages installed');
+                : 'No packages installed.');
         }
         return data.packages;
     }
@@ -137,7 +141,8 @@ async function getData() {
  * Create a default data object
  */
 function defaultData() {
-    return { packages: [] };
+    // TODO: Add a "set" subcommand to allow for modification of settings in CLI
+    return { packages: [], preservationTime: [48, 'hours'] };
 }
 // TODO: Might want to separate this function into three?
 /**
@@ -160,7 +165,7 @@ function getDataPath(type) {
             break;
         default:
             // TODO: Better platform support
-            throw new Error('Platform not supported!');
+            throw new Error('Platform not supported.');
     }
     // Different path based on requested type
     switch (type) {
