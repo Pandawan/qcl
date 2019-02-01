@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = __importDefault(require("commander"));
 const qcl_1 = __importDefault(require("./qcl"));
 commander_1.default.version(process.env.npm_package_version || 'unknown', '-v, --version');
+// TODO: add a --debug which will show all of the console.logs (rather than the basics) and write stack trace for errors
 commander_1.default
     .command('install <package>')
     .description('description')

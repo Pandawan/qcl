@@ -19,7 +19,7 @@ async function cleanup(debug = true) {
         const packagesToUninstall = data.packages.filter(pkg => 
         // If the install date + 48 hours < current date, uninstall this package
         moment_1.default(pkg.installed)
-            .add(data.preservationTime[0], data.preservationTime[1])
+            .add(data.preservation_time[0], data.preservation_time[1])
             .isBefore(moment_1.default()));
         // Loop through the list of packages and uninstall them
         for (const pkg of packagesToUninstall) {
@@ -44,8 +44,26 @@ async function install(pkgName, debug = true) {
     if (!pkgName) {
         throw new Error('No package was given.');
     }
+    const data = await getData();
+    if (data.packages.find(p => p.name === pkgName)) {
+        throw new Error(`Package "${pkgName}" is already installed.`);
+    }
+    // Download the file
+    // TODO: Make an axios get request
+    // Create a new package object
+    const pkg = {
+        file: `${pkgName}`,
+        installed: moment_1.default().toISOString(),
+        name: pkgName,
+    };
     if (debug) {
-        console.log(`Installing "${pkgName}" in ${getDataPath('packages')}`);
+        console.log(`Installing "${pkgName}" in ${getPackagePath(pkg)}`);
+    }
+    // Add the package to the packages list and save it
+    data.packages.push(pkg);
+    await setData(data);
+    if (debug) {
+        console.log(`Package "${pkgName}" was successfully installed.`);
     }
     // TODO: Install packages
 }
@@ -87,8 +105,12 @@ async function list(debug = true) {
     try {
         const data = await getData();
         if (debug) {
+            // TODO: Add parameters to display more information like version, etc.
+            // TODO: Format this into a table (without borders like "ls -l")
             console.log(data.packages && data.packages.length !== 0
-                ? data.packages.join(', ')
+                ? data.packages
+                    .map(p => `${p.name} - ${moment_1.default(p.installed).format('(YYYY-MM-DD hh:mm:ss a)')}`)
+                    .join('\n')
                 : 'No packages installed.');
         }
         return data.packages;
@@ -144,7 +166,7 @@ async function getData() {
  */
 function defaultData() {
     // TODO: Add a "set" subcommand to allow for modification of settings in CLI
-    return { packages: [], preservationTime: [48, 'hours'] };
+    return { packages: [], preservation_time: [48, 'hours'] };
 }
 // TODO: Might want to separate this function into three?
 /**

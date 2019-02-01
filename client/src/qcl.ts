@@ -1,10 +1,13 @@
+import axios from 'axios';
 import fse from 'fs-extra';
 import moment, { DurationInputArg2 } from 'moment';
 import path from 'path';
 
 // TODO: Might want to re-organize this entire file into multiple files (one for each major subcommand and one for shared functions)
-
+// TODO: Add /qcl/pkg to path
 // TODO: Might want to rename those to "better" names
+// TODO: Add a "set" subcommand that allows to set settings like private_key, preservation_time, debug_mode, etc.
+// TODO: Add version for packages so that calling "install" on a package might update it if needed
 interface IQCLPackage {
   /**
    * Name of the package installed
@@ -26,7 +29,7 @@ interface IQCLData {
    * How long should a package be preserved
    * Format: [number, 'unit']
    */
-  preservationTime: [number, DurationInputArg2];
+  preservation_time: [number, DurationInputArg2];
 }
 
 /**
@@ -44,7 +47,7 @@ async function cleanup(debug: boolean = true) {
     const packagesToUninstall = data.packages.filter(pkg =>
       // If the install date + 48 hours < current date, uninstall this package
       moment(pkg.installed)
-        .add(data.preservationTime[0], data.preservationTime[1])
+        .add(data.preservation_time[0], data.preservation_time[1])
         .isBefore(moment())
     );
 
@@ -73,9 +76,34 @@ async function install(pkgName: string, debug: boolean = true) {
     throw new Error('No package was given.');
   }
 
-  if (debug) {
-    console.log(`Installing "${pkgName}" in ${getDataPath('packages')}`);
+  const data = await getData();
+
+  if (data.packages.find(p => p.name === pkgName)) {
+    throw new Error(`Package "${pkgName}" is already installed.`);
   }
+
+  // Download the file
+  // TODO: Make an axios get request
+
+  // Create a new package object
+  const pkg: IQCLPackage = {
+    file: `${pkgName}`,
+    installed: moment().toISOString(),
+    name: pkgName,
+  };
+
+  if (debug) {
+    console.log(`Installing "${pkgName}" in ${getPackagePath(pkg)}`);
+  }
+
+  // Add the package to the packages list and save it
+  data.packages.push(pkg);
+  await setData(data);
+
+  if (debug) {
+    console.log(`Package "${pkgName}" was successfully installed.`);
+  }
+
   // TODO: Install packages
 }
 
@@ -124,9 +152,18 @@ async function list(debug: boolean = true): Promise<IQCLPackage[]> {
   try {
     const data = await getData();
     if (debug) {
+      // TODO: Add parameters to display more information like version, etc.
+      // TODO: Format this into a table (without borders like "ls -l")
       console.log(
         data.packages && data.packages.length !== 0
-          ? data.packages.join(', ')
+          ? data.packages
+              .map(
+                p =>
+                  `${p.name} - ${moment(p.installed).format(
+                    '(YYYY-MM-DD hh:mm:ss a)'
+                  )}`
+              )
+              .join('\n')
           : 'No packages installed.'
       );
     }
@@ -182,7 +219,7 @@ async function getData(): Promise<IQCLData> {
  */
 function defaultData(): IQCLData {
   // TODO: Add a "set" subcommand to allow for modification of settings in CLI
-  return { packages: [], preservationTime: [48, 'hours'] };
+  return { packages: [], preservation_time: [48, 'hours'] };
 }
 
 // TODO: Might want to separate this function into three?

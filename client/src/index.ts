@@ -5,6 +5,8 @@ import qcl from './qcl';
 
 program.version(process.env.npm_package_version || 'unknown', '-v, --version');
 
+// TODO: add a --debug which will show all of the console.logs (rather than the basics) and write stack trace for errors
+
 program
   .command('install <package>')
   .description('description')
