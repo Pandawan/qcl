@@ -15,6 +15,8 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.16.4",
+    "meme": "^0.1.2",
+    "node-cmd": "^3.0.0",
     "nodemon": "^1.18.9",
     "pkg": "^4.3.7"
   }

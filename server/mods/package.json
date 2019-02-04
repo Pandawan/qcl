@@ -1,0 +1,12 @@
+{
+  "name": "mods",
+  "version": "0.0.0",
+  "description": "source module storage",
+  "main": "index.js",
+  "private": true,
+  "author": "KhoomeiK",
+  "license": "MIT",
+  "dependencies": {
+    "meme": "^0.1.2"
+  }
+}
