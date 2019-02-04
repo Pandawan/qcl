@@ -25,6 +25,7 @@
   "devDependencies": {
     "@types/fs-extra": "^5.0.4",
     "@types/node": "^10.12.19",
+    "@types/table": "^4.0.5",
     "prettier": "^1.16.1",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.17.0",
@@ -32,8 +33,10 @@
     "typescript": "^3.2.4"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "commander": "^2.19.0",
     "fs-extra": "^7.0.1",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "table": "^5.2.2"
   }
 }
