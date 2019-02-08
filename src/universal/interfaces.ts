@@ -13,7 +13,13 @@ export interface IPackage {
 }
 
 export interface IData {
+  /**
+   * Which package manager to use to install packages.
+   */
   packageManager: PackageManager;
+  /**
+   * List of all currently installed packages
+   */
   packages: IPackage[];
   /**
    * How long should a package be preserved

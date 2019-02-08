@@ -1,8 +1,8 @@
 import moment from 'moment';
-import cmd from 'node-cmd';
 
-import { IPackage } from 'universal/interfaces';
 import getPackageManager, { getData, setData } from '../universal/data';
+import { IPackage } from '../universal/interfaces';
+import { getAsync } from '../universal/utils';
 
 /**
  * Installs the given package
@@ -41,9 +41,9 @@ async function installPackage(pkgName: string): Promise<IPackage> {
   const pkgManager = await getPackageManager();
   if (pkgManager === 'npm') {
     // TODO: Allow for extra parameters such as --global and --saveDev
-    await cmd.run(`npm install ${pkgName} -g`);
+    console.log(await getAsync(`npm install ${pkgName} -g`));
   } else if (pkgManager === 'yarn') {
-    await cmd.run(`yarn global add ${pkgName}`);
+    console.log(await getAsync(`yarn global add ${pkgName}`));
   }
 
   return pkg;

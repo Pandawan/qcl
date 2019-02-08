@@ -1,6 +1,5 @@
-import cmd from 'node-cmd';
-
 import getPackageManager, { getData, setData } from '../universal/data';
+import { getAsync } from '../universal/utils';
 
 /**
  * Uninstalls the given package
@@ -20,7 +19,7 @@ export default async function uninstall(pkgName: string) {
     throw new Error(`Package "${pkgName}" is not installed.`);
   }
 
-  console.log(`Uninstalling "${pkgName}"}`);
+  console.log(`Uninstalling "${pkgName}"`);
 
   // Actually uninstall the package
   uninstallPackage(pkgName);
@@ -39,8 +38,8 @@ async function uninstallPackage(pkgName: string): Promise<void> {
   const pkgManager = await getPackageManager();
   if (pkgManager === 'npm') {
     // TODO: Allow for extra parameters such as --global and --saveDev
-    await cmd.run(`npm uninstall ${pkgName} -g`);
+    console.log(await getAsync(`npm uninstall ${pkgName} -g`));
   } else if (pkgManager === 'yarn') {
-    await cmd.run(`yarn global remove ${pkgName}`);
+    console.log(await getAsync(`yarn global remove ${pkgName}`));
   }
 }

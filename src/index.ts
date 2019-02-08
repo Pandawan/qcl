@@ -34,7 +34,6 @@ program
   .action(
     withErrors((...args: any[]) => {
       const cmd: Command = args[args.length - 1];
-      console.log(cmd);
       // Format Options from Commmand
       const options: ListArgs[] = [
         cmd.versions ? 'versions' : undefined,
@@ -68,6 +67,8 @@ function withErrors(command: (...args: any[]) => Promise<any>) {
       console.log(e.stack);
       process.exitCode = 1;
     }
+    // Add an extra blank line after calling a command
+    console.log('');
   };
 }
 
