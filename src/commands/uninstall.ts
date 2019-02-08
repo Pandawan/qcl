@@ -1,7 +1,6 @@
-import fse from 'fs-extra';
+import cmd from 'node-cmd';
 
-import { getData, setData } from '../universal/data';
-import { getPackageFilePath, getPackagePath } from '../universal/path';
+import getPackageManager, { getData, setData } from '../universal/data';
 
 /**
  * Uninstalls the given package
@@ -21,12 +20,10 @@ export default async function uninstall(pkgName: string) {
     throw new Error(`Package "${pkgName}" is not installed.`);
   }
 
-  console.log(`Uninstalling "${pkgName}" in ${getPackagePath()}`);
+  console.log(`Uninstalling "${pkgName}"}`);
 
-  const pkg = data.packages[index];
-
-  // Delete the package from file system
-  await fse.remove(getPackageFilePath(pkg));
+  // Actually uninstall the package
+  uninstallPackage(pkgName);
 
   // Remove the package from the list
   data.packages = data.packages.filter((v, i) => i !== index);
@@ -35,4 +32,15 @@ export default async function uninstall(pkgName: string) {
   await setData(data);
 
   console.log(`Package "${pkgName}" was successfully uninstalled.`);
+}
+
+async function uninstallPackage(pkgName: string): Promise<void> {
+  // TODO: Maybe make this cleaner using a separate class?
+  const pkgManager = await getPackageManager();
+  if (pkgManager === 'npm') {
+    // TODO: Allow for extra parameters such as --global and --saveDev
+    await cmd.run(`npm uninstall ${pkgName} -g`);
+  } else if (pkgManager === 'yarn') {
+    await cmd.run(`yarn global remove ${pkgName}`);
+  }
 }

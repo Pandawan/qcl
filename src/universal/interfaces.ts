@@ -9,13 +9,11 @@ export interface IPackage {
    * Date of installation in ISO 8601 format
    */
   installed: string;
-  /**
-   * Name of the file in the /pkg folder
-   */
-  file: string;
+  // TODO: Add an install path so that it can record where it was install once we add local qcl (rather than global)
 }
 
 export interface IData {
+  packageManager: PackageManager;
   packages: IPackage[];
   /**
    * How long should a package be preserved
@@ -23,3 +21,5 @@ export interface IData {
    */
   preservation_time: [number, DurationInputArg2];
 }
+
+export type PackageManager = 'npm' | 'yarn';

@@ -2,10 +2,6 @@
 
 Quick CLI installer + runner
 
-## Server
+## NEW
 
-Node.js server indexes npm packages and compiles using pkg. When receiving request for npm package, serves the raw binary compiled for the platform.
-
-## Client
-
-When user runs "qcl [package]", sends GET request to server for binary and pushes to /usr/bin/local or correct directory. config.json defines configuration but deletes binaries after 48 hours by default.
+`qcl` is now a package manager built on TOP of other package managers. Rather than using its own binaries downloaded from our servers, it will simply keep track of all packages installed through package managers such as npm or yarn. It is a drop-in replacement for both of these (and uses them under the hood).

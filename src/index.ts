@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
-import program from 'commander';
+import program, { Command } from 'commander';
 import qcl from './qcl';
+
+import { ListArgs } from 'commands/list';
 
 program.version(process.env.npm_package_version || 'unknown', '-v, --version');
 
@@ -27,7 +29,20 @@ program
   .command('list')
   .alias('l')
   .description('description')
-  .action(withErrors(qcl.list));
+  .option('-v --versions', 'Show package version.')
+  .option('-e --expires', 'Show package expiry date.')
+  .action(
+    withErrors((...args: any[]) => {
+      const cmd: Command = args[args.length - 1];
+      console.log(cmd);
+      // Format Options from Commmand
+      const options: ListArgs[] = [
+        cmd.versions ? 'versions' : undefined,
+        cmd.expires ? 'expires' : undefined,
+      ];
+      return qcl.list(options);
+    })
+  );
 
 // Any other argument that isn't specified
 program.on('command:*', () => {

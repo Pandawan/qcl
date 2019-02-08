@@ -1,6 +1,6 @@
 import fse from 'fs-extra';
 
-import { IData } from './interfaces';
+import { IData, PackageManager } from './interfaces';
 import { getDataPath } from './path';
 
 /**
@@ -44,5 +44,14 @@ export async function getData(): Promise<IData> {
  * Create a default data object
  */
 export function defaultData(): IData {
-  return { packages: [], preservation_time: [48, 'hours'] };
+  return {
+    packageManager: 'npm',
+    packages: [],
+    preservation_time: [48, 'hours'],
+  };
+}
+
+export default async function getPackageManager(): Promise<PackageManager> {
+  const data = await getData();
+  return data.packageManager;
 }
