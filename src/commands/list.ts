@@ -1,10 +1,10 @@
-import moment from 'moment';
+import moment, { DurationInputArg2, DurationInputObject } from 'moment';
 import { getBorderCharacters, table } from 'table';
 
 import { getData } from '../universal/data';
-import { IPackage } from '../universal/interfaces';
+import { IData, IPackage, PreservationTime } from '../universal/interfaces';
 
-export type ListArgs = 'expires' | 'versions' | undefined;
+export type ListArgs = 'expires' | undefined;
 
 /**
  * List all packages installed
@@ -15,7 +15,7 @@ export default async function list(args: ListArgs[]): Promise<IPackage[]> {
 
     // If there are packages installed
     if (data.packages && data.packages.length !== 0) {
-      console.log(tableOutput(data.packages, args));
+      console.log(await tableOutput(data, args));
     } else {
       console.log('No packages installed.');
     }
@@ -29,24 +29,24 @@ export default async function list(args: ListArgs[]): Promise<IPackage[]> {
 /**
  * Create a formatted CLI table of all packages
  */
-function tableOutput(packages: IPackage[], args: ListArgs[]): string {
-  // TODO: Add 'expires' and 'version' values
-
+async function tableOutput(data: IData, args: ListArgs[]): Promise<string> {
   // Prepare table columns using command options
-  const data = [['Name', 'Installed']];
-  if (args.includes('versions')) data[0].push('Version');
-  if (args.includes('expires')) data[0].push('Expires');
+  const tableData = [['Name', 'Installed']];
+  if (args.includes('expires')) tableData[0].push('Expires');
 
-  // Add actual table data
-  data.concat(
-    packages.map(pkg => [
+  // Add table data
+  for (const pkg of data.packages) {
+    const values = [
       pkg.name,
-      // TODO: Find better format
-      moment(pkg.installed).format('YYYY-MM-DD hh:mm a'),
-    ])
-  );
+      moment(pkg.installed).format('YYYY-MM-DD hh:mmA'),
+    ];
+    if (args.includes('expires')) {
+      values.push(await expireTime(pkg.installed, data.preservation_time));
+    }
+    tableData.push(values);
+  }
 
-  return table(data, {
+  return table(tableData, {
     border: getBorderCharacters('void'),
     columnDefault: {
       paddingLeft: 1,
@@ -54,4 +54,21 @@ function tableOutput(packages: IPackage[], args: ListArgs[]): string {
     },
     drawHorizontalLine: () => false,
   });
+}
+
+/**
+ * Get when the package with the given install date will expire (in units)
+ * @param installedDate The time at which the package was installed
+ */
+export async function expireTime(
+  installedDate: string,
+  preservationTime: PreservationTime
+) {
+  // Calculate difference between expiry date & current date
+  const diff = moment(installedDate)
+    .add(preservationTime[0], preservationTime[1])
+    // Use same units as preservationTime
+    .diff(moment(), preservationTime[1]);
+
+  return `${diff} ${preservationTime[1]}`;
 }

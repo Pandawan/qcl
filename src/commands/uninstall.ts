@@ -22,7 +22,7 @@ export default async function uninstall(pkgName: string) {
   console.log(`Uninstalling "${pkgName}"`);
 
   // Actually uninstall the package
-  uninstallPackage(pkgName);
+  await uninstallPackage(pkgName);
 
   // Remove the package from the list
   data.packages = data.packages.filter((v, i) => i !== index);

@@ -1,4 +1,5 @@
 import { DurationInputArg2 } from 'moment';
+export declare type PreservationTime = [number, DurationInputArg2];
 export interface IPackage {
     /**
      * Name of the package installed
@@ -22,6 +23,6 @@ export interface IData {
      * How long should a package be preserved
      * Format: [number, 'unit']
      */
-    preservation_time: [number, DurationInputArg2];
+    preservation_time: PreservationTime;
 }
 export declare type PackageManager = 'npm' | 'yarn';

@@ -35,10 +35,7 @@ program
     withErrors((...args: any[]) => {
       const cmd: Command = args[args.length - 1];
       // Format Options from Commmand
-      const options: ListArgs[] = [
-        cmd.versions ? 'versions' : undefined,
-        cmd.expires ? 'expires' : undefined,
-      ];
+      const options: ListArgs[] = [cmd.expires ? 'expires' : undefined];
       return qcl.list(options);
     })
   );
