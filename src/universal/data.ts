@@ -19,22 +19,21 @@ export async function setData(data: IData): Promise<void> {
 }
 
 /**
- * Get the data from the /qcl/data.json file
+ * Get the data from the /qcl/data.json file (and silent-upgrade it)
  */
 export async function getData(): Promise<IData> {
   const dataPath = getDataPath();
   try {
-    // If the path exists, read it and return its data
-    if (await fse.pathExists(dataPath)) {
-      // Read the JSON file and return its data
-      const data: IData = await fse.readJson(dataPath);
-      return data;
-    } else {
-      // Set data using defaultData and return it
-      const data: IData = defaultData();
-      await setData(data);
-      return data;
-    }
+    // Make sure that the path exists
+    await fse.ensureFile(dataPath);
+    // Get the current data
+    const currentData = await fse.readJson(dataPath);
+    // Merge the currentData with the defaultData (preferring to keep currentData)
+    // this allows for a "mostly backwards compatible upgrade" of data.json
+    const data = Object.assign(defaultData(), currentData);
+    // Write the changes
+    await fse.writeJSON(dataPath, data);
+    return data;
   } catch (error) {
     throw error;
   }
@@ -45,7 +44,7 @@ export async function getData(): Promise<IData> {
  */
 export function defaultData(): IData {
   return {
-    packageManager: 'npm',
+    package_manager: 'npm',
     packages: [],
     preservation_time: [48, 'hours'],
   };
@@ -53,5 +52,5 @@ export function defaultData(): IData {
 
 export default async function getPackageManager(): Promise<PackageManager> {
   const data = await getData();
-  return data.packageManager;
+  return data.package_manager;
 }

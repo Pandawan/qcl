@@ -13,7 +13,7 @@ export interface IData {
     /**
      * Which package manager to use to install packages.
      */
-    packageManager: PackageManager;
+    package_manager: PackageManager;
     /**
      * List of all currently installed packages
      */

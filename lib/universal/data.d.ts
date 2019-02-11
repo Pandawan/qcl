@@ -4,7 +4,7 @@ import { IData, PackageManager } from './interfaces';
  */
 export declare function setData(data: IData): Promise<void>;
 /**
- * Get the data from the /qcl/data.json file
+ * Get the data from the /qcl/data.json file (and silent-upgrade it)
  */
 export declare function getData(): Promise<IData>;
 /**
