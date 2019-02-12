@@ -27,18 +27,7 @@ program
   .command('list')
   .alias('l')
   .description('description')
-  .option('-v --versions', 'Show package version.')
-  .option('-e --expires', 'Show package expiry date.')
-  .action(
-    withErrors((...args: any[]) => {
-      const cmd: Command = args[args.length - 1];
-      // Format Options from Commmand
-      const options: qcl.list.ListArgs[] = [
-        cmd.expires ? 'expires' : undefined,
-      ];
-      return qcl.list.default(options);
-    })
-  );
+  .action(withErrors(qcl.list.default));
 
 program
   .command('set <key> <value>')

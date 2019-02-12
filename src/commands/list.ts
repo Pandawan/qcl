@@ -1,21 +1,19 @@
-import moment, { DurationInputArg2, DurationInputObject } from 'moment';
+import moment from 'moment';
 import { getBorderCharacters, table } from 'table';
 
 import { getData } from '../universal/data';
 import { IData, IPackage, PreservationTime } from '../universal/interfaces';
 
-export type ListArgs = 'expires' | undefined;
-
 /**
  * List all packages installed
  */
-export default async function list(args: ListArgs[]): Promise<IPackage[]> {
+export default async function list(): Promise<IPackage[]> {
   try {
     const data = await getData();
 
     // If there are packages installed
     if (data.packages && data.packages.length !== 0) {
-      console.log(await tableOutput(data, args));
+      console.log(await tableOutput(data));
     } else {
       console.log('No packages installed.');
     }
@@ -29,20 +27,17 @@ export default async function list(args: ListArgs[]): Promise<IPackage[]> {
 /**
  * Create a formatted CLI table of all packages
  */
-async function tableOutput(data: IData, args: ListArgs[]): Promise<string> {
+async function tableOutput(data: IData): Promise<string> {
   // Prepare table columns using command options
-  const tableData = [['Name', 'Installed']];
-  if (args.includes('expires')) tableData[0].push('Expires');
+  const tableData = [['Name', 'Installed', 'Expires']];
 
   // Add table data
   for (const pkg of data.packages) {
     const values = [
       pkg.name,
       moment(pkg.installed).format('YYYY-MM-DD hh:mmA'),
+      await expireTime(pkg.installed, data.preservation_time),
     ];
-    if (args.includes('expires')) {
-      values.push(await expireTime(pkg.installed, data.preservation_time));
-    }
     tableData.push(values);
   }
 
