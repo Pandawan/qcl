@@ -38,8 +38,8 @@ async function uninstallPackage(pkgName: string): Promise<void> {
   const pkgManager = await getPackageManager();
   if (pkgManager === 'npm') {
     // TODO: Allow for extra parameters such as --global and --saveDev
-    console.log(await getAsync(`npm uninstall ${pkgName} -g`));
+    console.log(await getAsync(`sudo npm uninstall ${pkgName} -g`));
   } else if (pkgManager === 'yarn') {
-    console.log(await getAsync(`yarn global remove ${pkgName}`));
+    console.log(await getAsync(`sudo yarn global remove ${pkgName}`));
   }
 }

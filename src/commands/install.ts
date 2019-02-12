@@ -41,9 +41,9 @@ async function installPackage(pkgName: string): Promise<IPackage> {
   const pkgManager = await getPackageManager();
   if (pkgManager === 'npm') {
     // TODO: Allow for extra parameters such as --global and --saveDev
-    console.log(await getAsync(`npm install ${pkgName} -g`));
+    console.log(await getAsync(`sudo npm install ${pkgName} -g`));
   } else if (pkgManager === 'yarn') {
-    console.log(await getAsync(`yarn global add ${pkgName}`));
+    console.log(await getAsync(`sudo yarn global add ${pkgName}`));
   }
 
   return pkg;
