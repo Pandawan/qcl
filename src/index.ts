@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 
 import program, { Command } from 'commander';
-import qcl from './qcl';
-
-import { ListArgs } from 'commands/list';
+import * as qcl from './qcl';
 
 program.version(process.env.npm_package_version || 'unknown', '-v, --version');
 
@@ -11,19 +9,19 @@ program
   .command('install <package>')
   .description('description')
   .alias('i')
-  .action(withErrors(qcl.install));
+  .action(withErrors(qcl.install.default));
 
 program
   .command('uninstall <package>')
   .alias('u')
   .description('description')
-  .action(withErrors(qcl.uninstall));
+  .action(withErrors(qcl.uninstall.default));
 
 program
   .command('cleanup')
   .alias('c')
   .description('description')
-  .action(withErrors(qcl.cleanup));
+  .action(withErrors(qcl.cleanup.default));
 
 program
   .command('list')
@@ -35,10 +33,18 @@ program
     withErrors((...args: any[]) => {
       const cmd: Command = args[args.length - 1];
       // Format Options from Commmand
-      const options: ListArgs[] = [cmd.expires ? 'expires' : undefined];
-      return qcl.list(options);
+      const options: qcl.list.ListArgs[] = [
+        cmd.expires ? 'expires' : undefined,
+      ];
+      return qcl.list.default(options);
     })
   );
+
+program
+  .command('set <key> <value>')
+  .alias('l')
+  .description('description')
+  .action(withErrors(qcl.set.default));
 
 // Any other argument that isn't specified
 program.on('command:*', () => {
@@ -53,7 +59,7 @@ program.parse(process.argv);
 
 // Default action if no arguments are passed
 if (program.args.length === 0) {
-  qcl.cleanup();
+  withErrors(qcl.cleanup.default)().catch(undefined);
 }
 
 function withErrors(command: (...args: any[]) => Promise<any>) {

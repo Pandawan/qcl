@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-import qcl from './qcl';
+import * as qcl from './qcl';
 export default qcl;
