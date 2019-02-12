@@ -1,6 +1,6 @@
 import { DurationInputArg2 } from 'moment';
 
-export type PreservationTime = [number, DurationInputArg2];
+export type Expiry = [number, DurationInputArg2];
 
 export interface IPackage {
   /**
@@ -12,6 +12,8 @@ export interface IPackage {
    */
   installed: string;
   // TODO: Add an install path so that it can record where it was install once we add local qcl (rather than global)
+
+  expiry: Expiry | undefined;
 }
 
 export interface IData {
@@ -27,7 +29,7 @@ export interface IData {
    * How long should a package be preserved
    * Format: [number, 'unit']
    */
-  preservation_time: PreservationTime;
+  expiry: Expiry;
 }
 
 export type PackageManager = 'npm' | 'yarn';

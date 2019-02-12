@@ -1,32 +1,47 @@
 #!/usr/bin/env node
 
-import program, { Command } from 'commander';
+import program, { Command, CommandOptions } from 'commander';
 import * as qcl from './qcl';
+import { Expiry } from 'universal/interfaces';
 
 program.version(process.env.npm_package_version || 'unknown', '-v, --version');
 
 program
   .command('install <package>')
-  .description('description')
+  .option('-e --expiry <NumberUnit>', 'Use custom expiry for this package')
+  .description('Installs <package> using npm to default npm directory')
   .alias('i')
-  .action(withErrors(qcl.install.default));
+  .action(withErrors((...args: any[]) => {
+    if (args[1].expiry === undefined) {
+      return qcl.install.default(args[0], undefined);
+    }
+
+    let exp = args[1].expiry.split(/([0-9]+)/).filter((v: string) => v !== '')
+
+    if (exp.length === 2 && (typeof (exp[0]) === 'number' || typeof (exp[1]) === 'string')) {
+      return qcl.install.default(args[0], [exp[0], exp[1]]);
+    }
+    else {
+      throw new Error(`Incorrect value for expiry, must be in format "number units"`);
+    }
+  }));
 
 program
   .command('uninstall <package>')
   .alias('u')
-  .description('description')
+  .description('Uninstalls <package> using npm')
   .action(withErrors(qcl.uninstall.default));
 
 program
   .command('cleanup')
   .alias('c')
-  .description('description')
+  .description('Uninstalls all packages that have expired')
   .action(withErrors(qcl.cleanup.default));
 
 program
   .command('list')
   .alias('l')
-  .description('description')
+  .description('Lists all packages installed using qcl and their expiration')
   .action(withErrors(qcl.list.default));
 
 program

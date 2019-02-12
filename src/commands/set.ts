@@ -9,14 +9,14 @@ export default async function set(key: string, value: any) {
       );
     }
     data[key] = value;
-  } else if (key === 'preservation_time') {
+  } else if (key === 'expiry') {
     if (
       value.length !== 2 ||
       typeof value[0] !== 'number' ||
       typeof value[1] !== 'string'
     ) {
       throw new Error(
-        `Incorrect value for preservation_time, must be in format "number units"`
+        `Incorrect value for expiry, must be in format "number units"`
       );
     }
   } else {

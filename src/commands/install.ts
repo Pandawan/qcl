@@ -1,28 +1,32 @@
 import moment from 'moment';
 
 import getPackageManager, { getData, setData } from '../universal/data';
-import { IPackage } from '../universal/interfaces';
+import { IPackage, Expiry } from '../universal/interfaces';
 import { getAsync } from '../universal/utils';
 
 /**
  * Installs the given package
  * @param pkgName The package to install
  */
-export default async function install(pkgName: string) {
+export default async function install(pkgName: string, expiry: Expiry | undefined) {
   if (!pkgName) {
     throw new Error('No package was given.');
   }
 
+  if (expiry && expiry.length !== 2) {
+    throw new Error('Incorrect value for expiry, must be in format "number units"')
+  }
+  
   const data = await getData();
-
+  
   if (data.packages.find(p => p.name === pkgName)) {
     throw new Error(`Package "${pkgName}" is already installed.`);
   }
-
+  
   console.log(`Installing "${pkgName}"`);
-
+  
   // Install the package
-  const pkg = await installPackage(pkgName);
+  const pkg = await installPackage(pkgName, expiry);
 
   // Add the package to the packages list and save it
   data.packages.push(pkg);
@@ -31,10 +35,11 @@ export default async function install(pkgName: string) {
   console.log(`Package "${pkgName}" was successfully installed.`);
 }
 
-async function installPackage(pkgName: string): Promise<IPackage> {
+async function installPackage(pkgName: string, expiry: Expiry | undefined): Promise<IPackage> {
   const pkg: IPackage = {
     installed: moment().toISOString(),
     name: pkgName,
+    expiry: expiry || undefined
   };
 
   // TODO: Maybe make this cleaner using a separate class?
@@ -45,6 +50,5 @@ async function installPackage(pkgName: string): Promise<IPackage> {
   } else if (pkgManager === 'yarn') {
     console.log(await getAsync(`sudo yarn global add ${pkgName}`));
   }
-
   return pkg;
 }

@@ -8,5 +8,7 @@ Quick CLI installer + runner
 
 ## TODO
 
-- Finish every TODO
-- Clean things up
+- Finish TODOs
+- Add Babel
+- Clean up files
+- /usr/local/lib/qcl/ -> /globalNodeModukles/qcl/data.json

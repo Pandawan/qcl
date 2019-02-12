@@ -27,12 +27,18 @@ export default async function cleanup() {
 async function cleanupPackages(data: IData) {
   try {
     // Get a list of packages that have expired
-    const packagesToUninstall = data.packages.filter(pkg =>
+    const packagesToUninstall = data.packages.filter(pkg => {
       // If the install date + 48 hours < current date, uninstall this package
-      moment(pkg.installed)
-        .add(data.preservation_time[0], data.preservation_time[1])
-        .isBefore(moment())
-    );
+      if (pkg.expiry) {
+        moment(pkg.installed)
+          .add(pkg.expiry[0], pkg.expiry[1])
+          .isBefore(moment())
+      } else {
+        moment(pkg.installed)
+          .add(data.expiry[0], data.expiry[1])
+          .isBefore(moment())
+      }
+    });
 
     // Loop through the list of packages and uninstall them
     for (const pkg of packagesToUninstall) {

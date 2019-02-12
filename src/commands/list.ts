@@ -2,7 +2,7 @@ import moment from 'moment';
 import { getBorderCharacters, table } from 'table';
 
 import { getData } from '../universal/data';
-import { IData, IPackage, PreservationTime } from '../universal/interfaces';
+import { IData, IPackage, Expiry } from '../universal/interfaces';
 
 /**
  * List all packages installed
@@ -36,7 +36,7 @@ async function tableOutput(data: IData): Promise<string> {
     const values = [
       pkg.name,
       moment(pkg.installed).format('YYYY-MM-DD hh:mmA'),
-      await expireTime(pkg.installed, data.preservation_time),
+      await expireTime(pkg.installed, pkg.expiry || data.expiry),
     ];
     tableData.push(values);
   }
@@ -57,7 +57,7 @@ async function tableOutput(data: IData): Promise<string> {
  */
 export async function expireTime(
   installedDate: string,
-  preservationTime: PreservationTime
+  preservationTime: Expiry
 ) {
   // Calculate difference between expiry date & current date
   const diff = moment(installedDate)

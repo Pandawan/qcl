@@ -46,7 +46,7 @@ export function defaultData(): IData {
   return {
     package_manager: 'npm',
     packages: [],
-    preservation_time: [48, 'hours'],
+    expiry: [48, 'hours'],
   };
 }
 
