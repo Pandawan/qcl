@@ -36,7 +36,7 @@ async function tableOutput(data: IData): Promise<string> {
     const values = [
       pkg.name,
       moment(pkg.installed).format('YYYY-MM-DD hh:mmA'),
-      await expireTime(pkg.installed, pkg.expiry || data.expiry),
+      expireTime(pkg.installed, pkg.expiry || data.expiry),
     ];
     tableData.push(values);
   }
@@ -54,16 +54,14 @@ async function tableOutput(data: IData): Promise<string> {
 /**
  * Get when the package with the given install date will expire (in units)
  * @param installedDate The time at which the package was installed
+ * @param preservationTime How long the package is supposed to be preserved
  */
-export async function expireTime(
-  installedDate: string,
-  preservationTime: Expiry
-) {
+export function expireTime(installedDate: string, preservationTime: Expiry) {
   // Calculate difference between expiry date & current date
-  const diff = moment(installedDate)
+  const timeDifference = moment(installedDate)
     .add(preservationTime[0], preservationTime[1])
     // Use same units as preservationTime
-    .diff(moment(), preservationTime[1]);
+    .diff(moment());
 
-  return `${diff} ${preservationTime[1]}`;
+  return moment.duration(timeDifference).humanize(true);
 }

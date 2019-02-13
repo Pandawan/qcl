@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/PandawanFr/quicli#readme",
   "devDependencies": {
+    "@types/conf": "^2.1.0",
     "@types/fs-extra": "^5.0.4",
     "@types/node": "^10.12.19",
     "@types/table": "^4.0.5",
@@ -35,6 +36,7 @@
   },
   "dependencies": {
     "commander": "^2.19.0",
+    "conf": "^2.2.0",
     "fs-extra": "^7.0.1",
     "moment": "^2.24.0",
     "node-cmd": "^3.0.0",

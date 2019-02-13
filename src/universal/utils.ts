@@ -15,3 +15,18 @@ export function getAsync(command: string) {
     });
   });
 }
+
+/**
+ * Converts the given Time Unit to an appropriate one for moment.js
+ * @param unit The unit to convert
+ */
+export function convertTimes(unit: string) {
+  switch (unit) {
+    case 'min':
+      return 'minute';
+    case 'mins':
+      return 'minutes';
+    default:
+      return unit;
+  }
+}

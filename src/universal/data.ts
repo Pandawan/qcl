@@ -1,18 +1,15 @@
-import fse from 'fs-extra';
+import conf from 'conf';
 
 import { IData, PackageManager } from './interfaces';
-import { getDataPath } from './path';
+
+const config = new conf();
 
 /**
  * Save the given data to the /qcl/data.json file
  */
-export async function setData(data: IData): Promise<void> {
-  const dataPath = getDataPath();
+export function setData(data: IData) {
   try {
-    // Make sure the entire path exists
-    await fse.ensureFile(dataPath);
-    // Write the default data to the path
-    await fse.writeJSON(dataPath, data);
+    config.set(data);
   } catch (error) {
     throw error;
   }
@@ -22,17 +19,14 @@ export async function setData(data: IData): Promise<void> {
  * Get the data from the /qcl/data.json file (and silent-upgrade it)
  */
 export async function getData(): Promise<IData> {
-  const dataPath = getDataPath();
   try {
-    // Make sure that the path exists
-    await fse.ensureFile(dataPath);
     // Get the current data
-    const currentData = await fse.readJson(dataPath);
+    const currentData = config.store as IData;
     // Merge the currentData with the defaultData (preferring to keep currentData)
     // this allows for a "mostly backwards compatible upgrade" of data.json
     const data = Object.assign(defaultData(), currentData);
     // Write the changes
-    await fse.writeJSON(dataPath, data);
+    config.set(data);
     return data;
   } catch (error) {
     throw error;
@@ -44,9 +38,9 @@ export async function getData(): Promise<IData> {
  */
 export function defaultData(): IData {
   return {
+    expiry: [48, 'hours'],
     package_manager: 'npm',
     packages: [],
-    expiry: [48, 'hours'],
   };
 }
 

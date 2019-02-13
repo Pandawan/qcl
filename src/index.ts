@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
-import program, { Command, CommandOptions } from 'commander';
+import program from 'commander';
 import * as qcl from './qcl';
-import { Expiry } from 'universal/interfaces';
 
 program.version(process.env.npm_package_version || 'unknown', '-v, --version');
 
@@ -11,20 +10,34 @@ program
   .option('-e --expiry <NumberUnit>', 'Use custom expiry for this package')
   .description('Installs <package> using npm to default npm directory')
   .alias('i')
-  .action(withErrors((...args: any[]) => {
-    if (args[1].expiry === undefined) {
-      return qcl.install.default(args[0], undefined);
-    }
+  .action(
+    withErrors((...args: any[]) => {
+      // No expiry argument
+      if (args[1].expiry === undefined) {
+        return qcl.install.default(args[0], undefined);
+      }
 
-    let exp = args[1].expiry.split(/([0-9]+)/).filter((v: string) => v !== '')
+      // Parse the expiry argument
+      const exp = args[1].expiry
+        .split(/([0-9]+)/)
+        .filter((v: string) => v !== '');
 
-    if (exp.length === 2 && (typeof (exp[0]) === 'number' || typeof (exp[1]) === 'string')) {
-      return qcl.install.default(args[0], [exp[0], exp[1]]);
-    }
-    else {
-      throw new Error(`Incorrect value for expiry, must be in format "number units"`);
-    }
-  }));
+      // Make sure the expiry arguments are correct
+      if (
+        exp.length === 2 &&
+        (typeof exp[0] === 'number' || typeof exp[1] === 'string')
+      ) {
+        return qcl.install.default(args[0], [
+          parseInt(exp[0], 10),
+          qcl.convertTimes(exp[1]) as any,
+        ]);
+      } else {
+        throw new Error(
+          `Incorrect value for expiry, must be in format "number units"`
+        );
+      }
+    })
+  );
 
 program
   .command('uninstall <package>')

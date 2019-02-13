@@ -8,7 +8,6 @@ export default async function set(key: string, value: any) {
         `Incorrect value for package_manager, must be "npm" or "yarn"`
       );
     }
-    data[key] = value;
   } else if (key === 'expiry') {
     if (
       value.length !== 2 ||
@@ -23,5 +22,6 @@ export default async function set(key: string, value: any) {
     throw new Error(`No setting found with key ${key}.`);
   }
 
+  data[key] = value;
   console.log(`Successfully set "${key}" to "${value}"`);
 }

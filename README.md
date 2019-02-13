@@ -11,4 +11,6 @@ Quick CLI installer + runner
 - Finish TODOs
 - Add Babel
 - Clean up files
-- /usr/local/lib/qcl/ -> /globalNodeModukles/qcl/data.json
+- Make set & --expiry consistent so that it's either "5hours" or "5 hours" but not both
+- Make set & --expiry consistent with min/mins
+- Add expiry runtime type checking for everything (set, --expiry, list, etc.), perhaps using moment.isValid?
