@@ -1,4 +1,4 @@
-import getPackageManager, { getData, setData } from '../universal/data';
+import { getData, getPackageManager, setData } from '../universal/data';
 import { getAsync } from '../universal/utils';
 
 /**

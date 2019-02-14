@@ -12,5 +12,3 @@ Quick CLI installer + runner
 - Add Babel
 - Clean up files
 - Make set & --expiry consistent so that it's either "5hours" or "5 hours" but not both
-- Make set & --expiry consistent with min/mins
-- Add expiry runtime type checking for everything (set, --expiry, list, etc.), perhaps using moment.isValid?

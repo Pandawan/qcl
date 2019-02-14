@@ -2,7 +2,7 @@ import moment from 'moment';
 import { getBorderCharacters, table } from 'table';
 
 import { getData } from '../universal/data';
-import { IData, IPackage, Expiry } from '../universal/interfaces';
+import { Expiry, IData, IPackage } from '../universal/interfaces';
 
 /**
  * List all packages installed

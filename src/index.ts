@@ -58,7 +58,7 @@ program
   .action(withErrors(qcl.list.default));
 
 program
-  .command('set <key> <value>')
+  .command('set <key> <value...>')
   .alias('l')
   .description('description')
   .action(withErrors(qcl.set.default));

@@ -8,3 +8,4 @@ export declare function getAsync(command: string): Promise<{}>;
  * @param unit The unit to convert
  */
 export declare function convertTimes(unit: string): string;
+export declare function isValidDuration(amount: number | string, unit: string): boolean;

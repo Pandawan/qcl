@@ -1,4 +1,4 @@
-import { IPackage, Expiry } from '../universal/interfaces';
+import { Expiry, IPackage } from '../universal/interfaces';
 /**
  * List all packages installed
  */

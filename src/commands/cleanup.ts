@@ -30,13 +30,13 @@ async function cleanupPackages(data: IData) {
     const packagesToUninstall = data.packages.filter(pkg => {
       // If the install date + 48 hours < current date, uninstall this package
       if (pkg.expiry) {
-        moment(pkg.installed)
+        return moment(pkg.installed)
           .add(pkg.expiry[0], pkg.expiry[1])
-          .isBefore(moment())
+          .isBefore(moment());
       } else {
-        moment(pkg.installed)
+        return moment(pkg.installed)
           .add(data.expiry[0], data.expiry[1])
-          .isBefore(moment())
+          .isBefore(moment());
       }
     });
 

@@ -1,8 +1,8 @@
 import moment from 'moment';
 
-import getPackageManager, { getData, setData } from '../universal/data';
-import { IPackage, Expiry } from '../universal/interfaces';
-import { getAsync } from '../universal/utils';
+import { getData, getPackageManager, setData } from '../universal/data';
+import { Expiry, IPackage } from '../universal/interfaces';
+import { getAsync, isValidDuration } from '../universal/utils';
 
 /**
  * Installs the given package
@@ -16,7 +16,10 @@ export default async function install(
     throw new Error('No package was given.');
   }
 
-  if (expiry && expiry.length !== 2) {
+  if (
+    expiry &&
+    (expiry.length !== 2 || !isValidDuration(expiry[0], expiry[1]))
+  ) {
     throw new Error(
       'Incorrect value for expiry, must be in format "number units"'
     );
@@ -47,9 +50,9 @@ async function installPackage(
   expiry: Expiry | undefined
 ): Promise<IPackage> {
   const pkg: IPackage = {
+    expiry: expiry || undefined,
     installed: moment().toISOString(),
     name: pkgName,
-    expiry: expiry || undefined,
   };
 
   // TODO: Maybe make this cleaner using a separate class?

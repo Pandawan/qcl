@@ -1,3 +1,4 @@
+import moment from 'moment';
 import cmd from 'node-cmd';
 
 /**
@@ -29,4 +30,17 @@ export function convertTimes(unit: string) {
     default:
       return unit;
   }
+}
+
+export function isValidDuration(amount: number | string, unit: string) {
+  return (
+    // Check if first parameter number (amount)
+    isNaN(amount as any) ||
+    // Check if second parameter is a string (unit)
+    typeof unit !== 'string' ||
+    // Chck if valid duration
+    moment
+      .duration(parseInt(amount as any, 10), convertTimes(unit) as any)
+      .toISOString() !== 'P0D'
+  );
 }

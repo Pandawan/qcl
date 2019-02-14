@@ -16,6 +16,19 @@ export function setData(data: IData) {
 }
 
 /**
+ * Set a single key/value pair
+ * @param key The key to set
+ * @param value The value to set
+ */
+export function setSingleData(key: string, value: string) {
+  try {
+    config.set(key, value);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
  * Get the data from the /qcl/data.json file (and silent-upgrade it)
  */
 export async function getData(): Promise<IData> {
@@ -44,7 +57,7 @@ export function defaultData(): IData {
   };
 }
 
-export default async function getPackageManager(): Promise<PackageManager> {
+export async function getPackageManager(): Promise<PackageManager> {
   const data = await getData();
   return data.package_manager;
 }
