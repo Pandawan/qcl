@@ -1,5 +1,6 @@
 import moment from 'moment';
 import cmd from 'node-cmd';
+import { Expiry } from './interfaces';
 
 /**
  * Execute the command using node-cmd in an ASYNC function
@@ -43,4 +44,24 @@ export function isValidDuration(amount: number | string, unit: string) {
       .duration(parseInt(amount as any, 10), convertTimes(unit) as any)
       .toISOString() !== 'P0D'
   );
+}
+
+/**
+ * Parses the given string "5hours" into an expiry object [5, "hours"]
+ * @param value The value to parse
+ */
+export function parseDuration(value: string): Expiry {
+  const exp = value.split(/([0-9]+)/).filter((v: string) => v !== '');
+
+  // Make sure the expiry arguments are correct
+  if (
+    exp.length === 2 &&
+    (typeof exp[0] === 'number' || typeof exp[1] === 'string')
+  ) {
+    return [parseInt(exp[0], 10), convertTimes(exp[1]) as any];
+  } else {
+    throw new Error(
+      `Incorrect value for expiry, must be in format "<amount><units>"`
+    );
+  }
 }

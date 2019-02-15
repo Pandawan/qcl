@@ -21,7 +21,7 @@ export default async function install(
     (expiry.length !== 2 || !isValidDuration(expiry[0], expiry[1]))
   ) {
     throw new Error(
-      'Incorrect value for expiry, must be in format "number units"'
+      'Incorrect value for expiry, must be in format "<amount><units>"'
     );
   }
 

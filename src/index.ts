@@ -17,25 +17,8 @@ program
         return qcl.install.default(args[0], undefined);
       }
 
-      // Parse the expiry argument
-      const exp = args[1].expiry
-        .split(/([0-9]+)/)
-        .filter((v: string) => v !== '');
-
-      // Make sure the expiry arguments are correct
-      if (
-        exp.length === 2 &&
-        (typeof exp[0] === 'number' || typeof exp[1] === 'string')
-      ) {
-        return qcl.install.default(args[0], [
-          parseInt(exp[0], 10),
-          qcl.convertTimes(exp[1]) as any,
-        ]);
-      } else {
-        throw new Error(
-          `Incorrect value for expiry, must be in format "number units"`
-        );
-      }
+      const parsedExpiry = qcl.parseDuration(args[1].expiry);
+      return qcl.install.default(args[0], parsedExpiry);
     })
   );
 
@@ -58,10 +41,19 @@ program
   .action(withErrors(qcl.list.default));
 
 program
-  .command('set <key> <value...>')
+  .command('set <key> <value>')
   .alias('l')
   .description('description')
-  .action(withErrors(qcl.set.default));
+  .action(
+    withErrors((...args: any[]) => {
+      if (args[0] === 'expiry') {
+        const parsedExpiry = qcl.parseDuration(args[1]);
+        return qcl.set.default(args[0], parsedExpiry);
+      } else {
+        return qcl.set.default(args[0], args[1]);
+      }
+    })
+  );
 
 // Any other argument that isn't specified
 program.on('command:*', () => {

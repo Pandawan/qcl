@@ -11,4 +11,4 @@ Quick CLI installer + runner
 - Finish TODOs
 - Add Babel
 - Clean up files
-- Make set & --expiry consistent so that it's either "5hours" or "5 hours" but not both
+- Find out why uninstall doesn't remove packages from config.json
