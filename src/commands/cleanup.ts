@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import { defaultData, getData, setData } from '../universal/data';
+import { defaultData, getData, setSingleData } from '../universal/data';
 import { IData } from '../universal/interfaces';
 import uninstall from './uninstall';
 
@@ -9,11 +9,12 @@ import uninstall from './uninstall';
  */
 export default async function cleanup() {
   console.log('Cleaning up old packages.');
+
+  // Cleanup the data file
+  cleanupDataFile();
+
   // Cleanup/Uninstall expired packages
   await cleanupPackages();
-
-  // Cleanup the /qcl/data.json file
-  await cleanupDataFile();
 }
 
 /**
@@ -48,10 +49,10 @@ async function cleanupPackages() {
 }
 
 /**
- * Cleans Up/Upgrades the /qcl/data.json file by removing useless/outdated properties.
+ * Cleans Up/Upgrades the data file by removing useless/outdated properties.
  * This does it dynamically by keeping all of the properties that are in common with defaultData.
  */
-async function cleanupDataFile() {
+function cleanupDataFile() {
   const data = getData();
   // Get common properties between defaultData and currentData (data)
   const commonProperties = Object.keys(defaultData()).filter(key => {
@@ -59,10 +60,8 @@ async function cleanupDataFile() {
   });
 
   // Only keep the ones that are in common
-  const obj: any = {};
   commonProperties.forEach((property: string) => {
-    obj[property] = (data as any)[property];
+    const value = (data as any)[property];
+    setSingleData(property, value);
   });
-
-  await setData(obj as IData);
 }

@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import { getData, getPackageManager, setData } from '../universal/data';
+import { getData, getPackageManager, setSingleData } from '../universal/data';
 import { Expiry, IPackage } from '../universal/interfaces';
 import { getAsync, isValidDuration } from '../universal/utils';
 
@@ -25,12 +25,12 @@ export default async function install(
     );
   }
 
-  const data = getData();
+  const { packages } = getData();
 
   // If already installed, remove it so that it can be updated
-  const pAlready = data.packages.findIndex(p => p.name === pkgName);
+  const pAlready = packages.findIndex(p => p.name === pkgName);
   if (pAlready >= 0) {
-    data.packages.splice(pAlready, 1);
+    packages.splice(pAlready, 1);
   }
 
   console.log(`Installing "${pkgName}"`);
@@ -39,8 +39,8 @@ export default async function install(
   const pkg = await installPackage(pkgName, expiry);
 
   // Add the package to the packages list and save it
-  data.packages.push(pkg);
-  await setData(data);
+  packages.push(pkg);
+  setSingleData('packages', packages);
 
   console.log(`Package "${pkgName}" was successfully installed.`);
 }

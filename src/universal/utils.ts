@@ -28,6 +28,10 @@ export function convertTimes(unit: string) {
       return 'minute';
     case 'mins':
       return 'minutes';
+    case 'sec':
+      return 'second';
+    case 'secs':
+      return 'seconds';
     default:
       return unit;
   }

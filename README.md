@@ -11,5 +11,6 @@ Quick CLI installer + runner
 - Finish TODOs
 - Add Babel
 - Clean up files
+- Add descriptions to commands in `index.ts`
 - Add setting descriptions in `set --help` & when asking for incorrect key
-- Cleanup `cleanup` and other commands so that it uses key-based writes instead of full rewrite of data
+- Cleanup files so that they don't share data between functions (just keep doing getData, little to no side effects)

@@ -1,4 +1,4 @@
-import { getData, getPackageManager, setData } from '../universal/data';
+import { getData, getPackageManager, setSingleData } from '../universal/data';
 import { getAsync } from '../universal/utils';
 
 /**
@@ -11,10 +11,10 @@ export default async function uninstall(pkgName: string) {
   }
 
   // Fetch data
-  const data = getData();
+  const { packages } = getData();
 
   // Check that this package is installed.
-  const index = data.packages.findIndex(p => p.name === pkgName);
+  const index = packages.findIndex(p => p.name === pkgName);
   if (index < 0) {
     throw new Error(`Package "${pkgName}" is not installed.`);
   }
@@ -25,19 +25,19 @@ export default async function uninstall(pkgName: string) {
   await uninstallPackage(pkgName);
 
   // Remove the package from the list
-  data.packages = data.packages.filter((v, i) => i !== index);
+  const newPackages = packages.filter((v, i) => i !== index);
 
   // Update the data file with changes
-  await setData(data);
+  setSingleData('packages', newPackages);
 
   console.log(`Package "${pkgName}" was successfully uninstalled.`);
 }
 
 async function uninstallPackage(pkgName: string): Promise<void> {
-  // TODO: Maybe make this cleaner using a separate class?
   const pkgManager = await getPackageManager();
   if (pkgManager === 'npm') {
     // TODO: Allow for extra parameters such as --global and --saveDev
+    // TODO: Does sudo work on Windows?
     console.log(await getAsync(`sudo npm uninstall ${pkgName} -g`));
   } else if (pkgManager === 'yarn') {
     console.log(await getAsync(`sudo yarn global remove ${pkgName}`));
