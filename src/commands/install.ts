@@ -25,7 +25,7 @@ export default async function install(
     );
   }
 
-  const data = await getData();
+  const data = getData();
 
   // If already installed, remove it so that it can be updated
   const pAlready = data.packages.findIndex(p => p.name === pkgName);

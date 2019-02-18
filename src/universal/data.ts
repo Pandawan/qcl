@@ -31,7 +31,7 @@ export function setSingleData(key: string, value: string) {
 /**
  * Get the data from the /qcl/data.json file (and silent-upgrade it)
  */
-export async function getData(): Promise<IData> {
+export function getData(): IData {
   try {
     // Get the current data
     const currentData = config.store as IData;
@@ -58,6 +58,6 @@ export function defaultData(): IData {
 }
 
 export async function getPackageManager(): Promise<PackageManager> {
-  const data = await getData();
+  const data = getData();
   return data.package_manager;
 }

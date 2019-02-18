@@ -11,7 +11,7 @@ export default async function uninstall(pkgName: string) {
   }
 
   // Fetch data
-  const data = await getData();
+  const data = getData();
 
   // Check that this package is installed.
   const index = data.packages.findIndex(p => p.name === pkgName);

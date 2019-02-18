@@ -9,22 +9,18 @@ import uninstall from './uninstall';
  */
 export default async function cleanup() {
   console.log('Cleaning up old packages.');
-
-  // Fetch data
-  const data = await getData();
-
   // Cleanup/Uninstall expired packages
-  await cleanupPackages(data);
+  await cleanupPackages();
 
   // Cleanup the /qcl/data.json file
-  await cleanupDataFile(data);
+  await cleanupDataFile();
 }
 
 /**
  * Uninstall expired packages
- * @param data The data to check packages from
  */
-async function cleanupPackages(data: IData) {
+async function cleanupPackages() {
+  const data = getData();
   try {
     // Get a list of packages that have expired
     const packagesToUninstall = data.packages.filter(pkg => {
@@ -54,9 +50,9 @@ async function cleanupPackages(data: IData) {
 /**
  * Cleans Up/Upgrades the /qcl/data.json file by removing useless/outdated properties.
  * This does it dynamically by keeping all of the properties that are in common with defaultData.
- * @param data The data to clean up.
  */
-async function cleanupDataFile(data: IData) {
+async function cleanupDataFile() {
+  const data = getData();
   // Get common properties between defaultData and currentData (data)
   const commonProperties = Object.keys(defaultData()).filter(key => {
     return key in data;

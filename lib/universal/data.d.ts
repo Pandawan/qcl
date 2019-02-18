@@ -12,7 +12,7 @@ export declare function setSingleData(key: string, value: string): void;
 /**
  * Get the data from the /qcl/data.json file (and silent-upgrade it)
  */
-export declare function getData(): Promise<IData>;
+export declare function getData(): IData;
 /**
  * Create a default data object
  */

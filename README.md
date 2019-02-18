@@ -11,4 +11,5 @@ Quick CLI installer + runner
 - Finish TODOs
 - Add Babel
 - Clean up files
-- Find out why uninstall doesn't remove packages from config.json
+- Add setting descriptions in `set --help` & when asking for incorrect key
+- Cleanup `cleanup` and other commands so that it uses key-based writes instead of full rewrite of data
