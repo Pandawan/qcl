@@ -3,7 +3,10 @@ import { convertTimes, isValidDuration } from '../universal/utils';
 
 export default async function set(key: string, value: any) {
   let finalValue = value;
-  if (key === 'package_manager') {
+  if (key === 'package_manager' || key === 'pm') {
+    if (key === 'pm') {
+      key = 'package_manager'
+    }
     if (value !== 'npm' && value !== 'yarn') {
       throw new Error(
         `Incorrect value for package_manager, must be "npm" or "yarn"`
@@ -11,7 +14,10 @@ export default async function set(key: string, value: any) {
     } else {
       finalValue = value;
     }
-  } else if (key === 'expiry') {
+  } else if (key === 'expiry' || key === 'e') {
+    if (key === 'e') {
+      key = 'expiry'
+    }
     if (!isValidDuration(value[0], value[1])) {
       throw new Error(
         `Incorrect value for expiry, must be in format "<amount><units>"`

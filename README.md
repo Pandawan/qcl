@@ -8,9 +8,9 @@ Quick CLI installer + runner
 
 ## TODO
 
-- Finish TODOs
 - Add Babel
 - Clean up files
 - Add descriptions to commands in `index.ts`
 - Add setting descriptions in `set --help` & when asking for incorrect key
-- Cleanup files so that they don't share data between functions (just keep doing getData, little to no side effects)
+- Clean up files so that they don't share data between functions (just keep doing getData, little to no side effects)
+- Error catch for set expiry if value is wrong

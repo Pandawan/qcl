@@ -42,11 +42,11 @@ program
 
 program
   .command('set <key> <value>')
-  .alias('l')
+  .alias('s')
   .description('description')
   .action(
     withErrors((...args: any[]) => {
-      if (args[0] === 'expiry') {
+      if (args[0] === 'expiry' || args[0] === 'e') {
         const parsedExpiry = qcl.parseDuration(args[1]);
         return qcl.set.default(args[0], parsedExpiry);
       } else {
