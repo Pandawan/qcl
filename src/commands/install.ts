@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import { getData, getPackageManager, setSingleData } from '../universal/data';
+import { getData, setSingleData } from '../universal/data';
 import { Expiry, IPackage } from '../universal/interfaces';
 import { getAsync, isValidDuration } from '../universal/utils';
 
@@ -55,12 +55,12 @@ async function installPackage(
     name: pkgName,
   };
 
-  // TODO: Maybe make this cleaner using a separate class?
-  const pkgManager = await getPackageManager();
-  if (pkgManager === 'npm') {
+  const { package_manager } = getData();
+
+  if (package_manager === 'npm') {
     // TODO: Allow for extra parameters such as --global and --saveDev
     console.log(await getAsync(`sudo npm install ${pkgName} -g`));
-  } else if (pkgManager === 'yarn') {
+  } else if (package_manager === 'yarn') {
     console.log(await getAsync(`sudo yarn global add ${pkgName}`));
   }
   return pkg;

@@ -1,4 +1,4 @@
-import { IData, PackageManager } from './interfaces';
+import { IData } from './interfaces';
 /**
  * Set a single key/value pair
  * @param key The key to set
@@ -13,4 +13,3 @@ export declare function getData(): IData;
  * Create a default data object
  */
 export declare function defaultData(): IData;
-export declare function getPackageManager(): Promise<PackageManager>;

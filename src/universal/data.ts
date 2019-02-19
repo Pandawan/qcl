@@ -45,8 +45,3 @@ export function defaultData(): IData {
     packages: [],
   };
 }
-
-export async function getPackageManager(): Promise<PackageManager> {
-  const data = getData();
-  return data.package_manager;
-}

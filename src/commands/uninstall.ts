@@ -1,4 +1,4 @@
-import { getData, getPackageManager, setSingleData } from '../universal/data';
+import { getData, setSingleData } from '../universal/data';
 import { getAsync } from '../universal/utils';
 
 /**
@@ -34,12 +34,12 @@ export default async function uninstall(pkgName: string) {
 }
 
 async function uninstallPackage(pkgName: string): Promise<void> {
-  const pkgManager = await getPackageManager();
-  if (pkgManager === 'npm') {
+  const { package_manager } = getData();
+  if (package_manager === 'npm') {
     // TODO: Allow for extra parameters such as --global and --saveDev
     // TODO: Does sudo work on Windows?
     console.log(await getAsync(`sudo npm uninstall ${pkgName} -g`));
-  } else if (pkgManager === 'yarn') {
+  } else if (package_manager === 'yarn') {
     console.log(await getAsync(`sudo yarn global remove ${pkgName}`));
   }
 }
