@@ -65,7 +65,7 @@ export function parseDuration(value: string): Expiry {
     return [parseInt(exp[0], 10), convertTimes(exp[1]) as any];
   } else {
     throw new Error(
-      `Incorrect value for expiry, must be in format "<amount><units>"`
+      `Incorrect value for expiry, must be in format "<NumberUnit>"`
     );
   }
 }

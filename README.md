@@ -10,7 +10,4 @@ Quick CLI installer + runner
 
 - Add Babel
 - Clean up files
-- Add descriptions to commands in `index.ts`
-- Add setting descriptions in `set --help` & when asking for incorrect key
 - Clean up files so that they don't share data between functions (just keep doing getData, little to no side effects)
-- Error catch for set expiry if value is wrong
