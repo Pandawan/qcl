@@ -8,6 +8,11 @@ Quick CLI installer + runner
 
 ## TODO
 
-- Add Babel
-- Clean up files
+- Fix import issues (with babel?) (where you have to do `qcl.install.default` instead of just `qcl.install()`)
 - Clean up files so that they don't share data between functions (just keep doing getData, little to no side effects)
+
+## How to Dev
+
+Now that qcl uses Babel, here's how to build and type-check.
+When starting to code, run `npm run type-check:watch` to automatically typecheck on file change. Or simply use `npm run type-check` if you prefer to do it manually.
+To build the code, run `npm run build`, this will compile everything into the `lib` directory.
