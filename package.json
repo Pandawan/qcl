@@ -7,11 +7,8 @@
   "private": true,
   "scripts": {
     "start": "node lib/index.js",
-    "type-check": "tsc --noEmit",
-    "type-check:watch": "npm run type-check -- --watch",
-    "build": "npm run build:types && npm run build:js",
-    "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "babel src --out-dir lib --extensions \".ts\" --source-maps inline"
+    "build": "tsc",
+    "watch": "tsc --watch"
   },
   "repository": {
     "type": "git",
@@ -27,11 +24,6 @@
   },
   "homepage": "https://github.com/PandawanFr/quicli#readme",
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.3",
-    "@babel/plugin-proposal-class-properties": "^7.3.3",
-    "@babel/preset-env": "^7.2.0",
-    "@babel/preset-typescript": "^7.3.3",
     "@types/conf": "^2.1.0",
     "@types/fs-extra": "^5.0.4",
     "@types/node": "^10.12.19",
