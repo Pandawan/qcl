@@ -1,13 +1,12 @@
 import moment from 'moment';
 
 import { defaultData, getData, setSingleData } from '../universal/data';
-import { IData } from '../universal/interfaces';
-import uninstall from './uninstall';
+import * as uninstall from './uninstall';
 
 /**
  * Runs basic qcl tasks and cleanup
  */
-export default async function cleanup() {
+export async function run() {
   console.log('Cleaning up old packages.');
 
   // Cleanup the data file
@@ -39,7 +38,7 @@ async function cleanupPackages() {
 
     // Loop through the list of packages and uninstall them
     for (const pkg of packagesToUninstall) {
-      await uninstall(pkg.name);
+      await uninstall.run(pkg.name);
     }
 
     console.log('Successfully cleaned up packages.');

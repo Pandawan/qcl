@@ -1,4 +1,4 @@
 /**
  * Runs basic qcl tasks and cleanup
  */
-export default function cleanup(): Promise<void>;
+export declare function run(): Promise<void>;

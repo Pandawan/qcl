@@ -3,7 +3,7 @@ import { getBorderCharacters, table } from 'table';
 import { setSingleData } from '../universal/data';
 import { convertTimes, isValidDuration } from '../universal/utils';
 
-export default async function set(key: string, value: any) {
+export async function run(key: string, value: any) {
   let finalValue = value;
   if (key === 'package_manager' || key === 'pm') {
     if (key === 'pm') {

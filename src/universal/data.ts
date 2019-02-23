@@ -1,6 +1,6 @@
 import conf from 'conf';
 
-import { IData, PackageManager } from './interfaces';
+import { IData } from './interfaces';
 
 const config = new conf();
 

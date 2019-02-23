@@ -8,7 +8,7 @@
     },
     "rules": {
         "no-console": {
-            "severity": "warning"
+            "severity": "off"
         },
         "no-null-keyword": {
             "severity": "warning"

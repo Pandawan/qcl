@@ -8,10 +8,7 @@ import { getAsync, isValidDuration } from '../universal/utils';
  * Installs the given package
  * @param pkgName The package to install
  */
-export default async function install(
-  pkgName: string,
-  expiry: Expiry | undefined
-) {
+export async function run(pkgName: string, expiry: Expiry | undefined) {
   if (!pkgName) {
     throw new Error('No package was given.');
   }

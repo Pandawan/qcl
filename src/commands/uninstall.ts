@@ -5,7 +5,7 @@ import { getAsync } from '../universal/utils';
  * Uninstalls the given package
  * @param pkgName The package to uninstall
  */
-export default async function uninstall(pkgName: string) {
+export async function run(pkgName: string) {
   if (!pkgName) {
     throw new Error('No package was given.');
   }

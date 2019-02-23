@@ -4,5 +4,5 @@ import * as list from './commands/list';
 import * as set from './commands/set';
 import * as uninstall from './commands/uninstall';
 export * from './universal/interfaces';
-export { convertTimes, parseDuration } from './universal/utils';
+export { convertTimes, isValidDuration, parseDuration, } from './universal/utils';
 export { cleanup, install, list, uninstall, set };

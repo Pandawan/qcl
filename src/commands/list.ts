@@ -7,7 +7,7 @@ import { Expiry, IData, IPackage } from '../universal/interfaces';
 /**
  * List all packages installed
  */
-export default async function list(): Promise<IPackage[]> {
+export async function run(): Promise<IPackage[]> {
   try {
     const data = getData();
 

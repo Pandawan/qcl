@@ -55,13 +55,10 @@ export function isValidDuration(amount: number | string, unit: string) {
  * @param value The value to parse
  */
 export function parseDuration(value: string): Expiry {
-  const exp = value.split(/([0-9]+)/).filter((v: string) => v !== '');
+  const exp = value.split(/([0-9]+)/).filter(v => v !== '');
 
   // Make sure the expiry arguments are correct
-  if (
-    exp.length === 2 &&
-    (typeof exp[0] === 'number' || typeof exp[1] === 'string')
-  ) {
+  if (exp.length === 2 && isValidDuration(exp[0], exp[1])) {
     return [parseInt(exp[0], 10), convertTimes(exp[1]) as any];
   } else {
     throw new Error(

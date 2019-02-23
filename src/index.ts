@@ -14,11 +14,11 @@ program
     withErrors((...args: any[]) => {
       // No expiry argument
       if (args[1].expiry === undefined) {
-        return qcl.install.default(args[0], undefined);
+        return qcl.install.run(args[0], undefined);
       }
 
       const parsedExpiry = qcl.parseDuration(args[1].expiry);
-      return qcl.install.default(args[0], parsedExpiry);
+      return qcl.install.run(args[0], parsedExpiry);
     })
   );
 
@@ -26,19 +26,19 @@ program
   .command('uninstall <package>')
   .alias('u')
   .description('Uninstalls <package> using npm')
-  .action(withErrors(qcl.uninstall.default));
+  .action(withErrors(qcl.uninstall.run));
 
 program
   .command('cleanup')
   .alias('c')
   .description('Uninstalls all packages that have expired')
-  .action(withErrors(qcl.cleanup.default));
+  .action(withErrors(qcl.cleanup.run));
 
 program
   .command('list')
   .alias('l')
   .description('Lists all packages installed using qcl and their expiration')
-  .action(withErrors(qcl.list.default));
+  .action(withErrors(qcl.list.run));
 
 program
   .command('set <key> <value>')
@@ -54,9 +54,9 @@ program
     withErrors((...args: any[]) => {
       if (args[0] === 'expiry' || args[0] === 'e') {
         const parsedExpiry = qcl.parseDuration(args[1]);
-        return qcl.set.default(args[0], parsedExpiry);
+        return qcl.set.run(args[0], parsedExpiry);
       } else {
-        return qcl.set.default(args[0], args[1]);
+        return qcl.set.run(args[0], args[1]);
       }
     })
   );
@@ -74,7 +74,7 @@ program.parse(process.argv);
 
 // Default action if no arguments are passed
 if (program.args.length === 0) {
-  withErrors(qcl.cleanup.default)().catch(undefined);
+  withErrors(qcl.cleanup.run)().catch(undefined);
 }
 
 function withErrors(command: (...args: any[]) => Promise<any>) {
