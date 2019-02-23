@@ -3,11 +3,14 @@ import { getBorderCharacters, table } from 'table';
 
 import { getData } from '../universal/data';
 import { Expiry, IData, IPackage } from '../universal/interfaces';
+import * as cleanup from './cleanup';
 
 /**
  * List all packages installed
  */
 export async function run(): Promise<IPackage[]> {
+  await cleanup.run();
+
   try {
     const data = getData();
 

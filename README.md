@@ -1,13 +1,10 @@
-# qcl: quicli
+# qcl: Quick Command Line
 
-Quick CLI installer + runner
-
-## NEW
-
-`qcl` is now a package manager built on TOP of other package managers. Rather than using its own binaries downloaded from our servers, it will simply keep track of all packages installed through package managers such as npm or yarn. It is a drop-in replacement for both of these (and uses them under the hood).
+`qcl` is an addon that works on top of other package managers like npm and yarn.
+It keeps track of all globally installed packages and removes those that have passed their expiry date.
+This allows you to quickly install temporary packages (or CLIs) without having to worry about uninstalling them.
 
 ## TODO
 
-- Add Babel
-- Clean up files
-- Clean up files so that they don't share data between functions (just keep doing getData, little to no side effects)
+- Make better README with helpful commands
+- Make qcl work with local

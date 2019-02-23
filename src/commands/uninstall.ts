@@ -1,11 +1,14 @@
 import { getData, setSingleData } from '../universal/data';
 import { getAsync } from '../universal/utils';
+import * as cleanup from './cleanup';
 
 /**
  * Uninstalls the given package
  * @param pkgName The package to uninstall
  */
 export async function run(pkgName: string) {
+  await cleanup.run();
+
   if (!pkgName) {
     throw new Error('No package was given.');
   }

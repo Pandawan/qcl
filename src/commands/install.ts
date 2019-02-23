@@ -3,12 +3,15 @@ import moment from 'moment';
 import { getData, setSingleData } from '../universal/data';
 import { Expiry, IPackage } from '../universal/interfaces';
 import { getAsync, isValidDuration } from '../universal/utils';
+import * as cleanup from './cleanup';
 
 /**
  * Installs the given package
  * @param pkgName The package to install
  */
 export async function run(pkgName: string, expiry: Expiry | undefined) {
+  await cleanup.run();
+
   if (!pkgName) {
     throw new Error('No package was given.');
   }
