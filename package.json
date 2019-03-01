@@ -1,6 +1,6 @@
 {
   "name": "qcl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Quick Command Line",
   "main": "lib/index.js",
   "bin": "lib/index.js",
@@ -14,7 +14,21 @@
     "url": "git+https://github.com/PandawanFr/qcl.git"
   },
   "keywords": [
-    "cli"
+    "cli",
+    "terminal",
+    "console",
+    "global",
+    "packages",
+    "package manager",
+    "npm",
+    "yarn",
+    "command",
+    "expire",
+    "expiration",
+    "expiry",
+    "fast",
+    "quick",
+    "quick command line"
   ],
   "author": "Pandawan, KhoomeiK",
   "license": "MIT",

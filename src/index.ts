@@ -47,7 +47,9 @@ program
     `Set config elements to be used by qcl ${
       // Add extra help if using the qcl set --help (but don't if doing qcl --help)
       // Essentially this ONLY shows the help if --help is AFTER set
-      !/--help.*set/.test(process.argv.join(' ')) ? '\n' + qcl.set.help() : ''
+      /set (.*)(-h|--help)/.test(process.argv.join(' '))
+        ? '\n' + qcl.set.help()
+        : ''
     }`
   )
   .action(
