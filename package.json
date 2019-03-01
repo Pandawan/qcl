@@ -1,6 +1,6 @@
 {
   "name": "qcl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Quick Command Line",
   "main": "lib/index.js",
   "bin": "lib/index.js",
@@ -23,10 +23,12 @@
     "npm",
     "yarn",
     "command",
-    "fast",
     "expire",
     "expiration",
-    "expiry"
+    "expiry",
+    "fast",
+    "quick",
+    "quick command line"
   ],
   "author": "Pandawan, KhoomeiK",
   "license": "MIT",
