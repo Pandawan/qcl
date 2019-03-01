@@ -1,4 +1,4 @@
-# qcl: Quick Command Line [![Github License](https://img.shields.io/github/license/pandawanfr/qcl.svg)](LICENSE) [![npm version](https://img.shields.io/npm/v/qcl.svg)](https://www.npmjs.com/package/qcl)
+# qcl: Quick Command Line [![npm version](https://img.shields.io/npm/v/qcl.svg)](https://www.npmjs.com/package/qcl) [![Github License](https://img.shields.io/github/license/pandawanfr/qcl.svg)](LICENSE)
 
 `qcl` is an addon that works on top of other package managers like npm and yarn.
 

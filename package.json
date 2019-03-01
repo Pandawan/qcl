@@ -14,7 +14,19 @@
     "url": "git+https://github.com/PandawanFr/qcl.git"
   },
   "keywords": [
-    "cli"
+    "cli",
+    "terminal",
+    "console",
+    "global",
+    "packages",
+    "package manager",
+    "npm",
+    "yarn",
+    "command",
+    "fast",
+    "expire",
+    "expiration",
+    "expiry"
   ],
   "author": "Pandawan, KhoomeiK",
   "license": "MIT",
