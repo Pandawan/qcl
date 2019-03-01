@@ -36,6 +36,12 @@ async function cleanupPackages() {
       }
     });
 
+    // Different message if no packages
+    if (packagesToUninstall.length === 0) {
+      console.log('No packages to clean up.');
+      return;
+    }
+
     // Loop through the list of packages and uninstall them
     for (const pkg of packagesToUninstall) {
       await uninstall.run(pkg.name);
