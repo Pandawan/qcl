@@ -8,7 +8,7 @@ By default, packages are kept for 48 hours. (See [Configuration](#Configuration)
 
 ## Why
 
-A lot of us have CLIs we installed years ago to interface with some obscure framework we were learning back in 2013. Now that CLI takes up a sizeable chunk of space and can sometimes cause keyword conflicts with other tools we use. That's why you'd use `qcl` to automatically uninstall that bulky package when you're done using it.
+A lot of us have CLIs we installed years ago to interface with some obscure framework we were learning back in 2013. Today, CLIs take up a sizeable chunk of space and can sometimes cause keyword conflicts with other tools we use. To remedy this, you can use `qcl` to automatically uninstall that bulky package when you're done using it.
 
 ## Installation
 
@@ -33,7 +33,7 @@ Install a package:
 ```sh
 qcl install express
 # or with custom expiry time
-qcl install -e 3days
+qcl install express -e 3days
 ```
 
 Uninstall a package:
