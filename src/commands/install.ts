@@ -58,8 +58,7 @@ async function installPackage(
   const { package_manager } = getData();
 
   if (package_manager === 'npm') {
-    // TODO: Allow for extra parameters such as --global and --saveDev
-    console.log(await getAsync(`sudo npm install ${pkgName} -g`));
+    console.log(await getAsync(`npm install ${pkgName} -g`));
   } else if (package_manager === 'yarn') {
     console.log(await getAsync(`sudo yarn global add ${pkgName}`));
   }

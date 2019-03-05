@@ -39,9 +39,7 @@ export async function run(pkgName: string) {
 async function uninstallPackage(pkgName: string): Promise<void> {
   const { package_manager } = getData();
   if (package_manager === 'npm') {
-    // TODO: Allow for extra parameters such as --global and --saveDev
-    // TODO: Does sudo work on Windows?
-    console.log(await getAsync(`sudo npm uninstall ${pkgName} -g`));
+    console.log(await getAsync(`npm uninstall ${pkgName} -g`));
   } else if (package_manager === 'yarn') {
     console.log(await getAsync(`sudo yarn global remove ${pkgName}`));
   }
