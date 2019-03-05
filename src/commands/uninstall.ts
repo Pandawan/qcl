@@ -8,7 +8,15 @@ import * as cleanup from './cleanup';
  */
 export async function run(pkgName: string) {
   await cleanup.run();
+  // Once cleanup is done, call the main function
+  // This is required because otherwise cleanup calls itself.
+  await uninstallAfterCleanup(pkgName);
+}
 
+/**
+ * This should only be used internally by the uninstall and cleanup commands.
+ */
+export async function uninstallAfterCleanup(pkgName: string): Promise<void> {
   if (!pkgName) {
     throw new Error('No package was given.');
   }

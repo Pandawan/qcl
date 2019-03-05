@@ -44,7 +44,7 @@ async function cleanupPackages() {
 
     // Loop through the list of packages and uninstall them
     for (const pkg of packagesToUninstall) {
-      await uninstall.run(pkg.name);
+      await uninstall.uninstallAfterCleanup(pkg.name);
     }
 
     console.log('Successfully cleaned up packages.');
