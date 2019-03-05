@@ -1,6 +1,6 @@
 {
   "name": "qcl",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Quick Command Line",
   "main": "lib/index.js",
   "bin": "lib/index.js",
