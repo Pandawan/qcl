@@ -84,7 +84,7 @@ function withErrors(command: (...args: any[]) => Promise<any>) {
     try {
       await command(...args);
     } catch (e) {
-      console.log(e.stack);
+      console.error(e.message);
       process.exitCode = 1;
     }
     // Add an extra blank line after calling a command

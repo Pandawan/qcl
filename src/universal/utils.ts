@@ -1,18 +1,23 @@
+import { spawn } from 'child_process';
 import moment from 'moment';
-import cmd from 'node-cmd';
 import { Expiry } from './interfaces';
 
 /**
- * Execute the command using node-cmd in an ASYNC function
+ * Execute the command using node-cmd in an ASYNC function, using the current stdio.
  * @param command The command to run
  */
 export function getAsync(command: string) {
   return new Promise((resolve, reject) => {
-    cmd.get(command, (err: Error, data: any) => {
-      if (err) {
-        reject(err);
+    const process = spawn(command, { stdio: 'inherit', shell: true });
+
+    process.on('error', error => {
+      reject(new Error(`${command} encountered error ${error.message}`));
+    });
+    process.on('exit', code => {
+      if (code !== 0) {
+        reject(new Error(`${command} exited with code ${code}`));
       } else {
-        resolve(data);
+        resolve();
       }
     });
   });

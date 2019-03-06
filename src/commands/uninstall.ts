@@ -47,8 +47,8 @@ export async function uninstallAfterCleanup(pkgName: string): Promise<void> {
 async function uninstallPackage(pkgName: string): Promise<void> {
   const { package_manager } = getData();
   if (package_manager === 'npm') {
-    console.log(await getAsync(`npm uninstall ${pkgName} -g`));
+    await getAsync(`npm uninstall ${pkgName} -g`);
   } else if (package_manager === 'yarn') {
-    console.log(await getAsync(`sudo yarn global remove ${pkgName}`));
+    await getAsync(`sudo yarn global remove ${pkgName}`);
   }
 }

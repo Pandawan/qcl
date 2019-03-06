@@ -58,9 +58,9 @@ async function installPackage(
   const { package_manager } = getData();
 
   if (package_manager === 'npm') {
-    console.log(await getAsync(`npm install ${pkgName} -g`));
+    await getAsync(`npm install ${pkgName} -g`);
   } else if (package_manager === 'yarn') {
-    console.log(await getAsync(`sudo yarn global add ${pkgName}`));
+    await getAsync(`sudo yarn global add ${pkgName}`);
   }
   return pkg;
 }

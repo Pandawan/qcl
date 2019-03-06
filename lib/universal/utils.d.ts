@@ -1,6 +1,6 @@
 import { Expiry } from './interfaces';
 /**
- * Execute the command using node-cmd in an ASYNC function
+ * Execute the command using node-cmd in an ASYNC function, using the current stdio.
  * @param command The command to run
  */
 export declare function getAsync(command: string): Promise<{}>;
